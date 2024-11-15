@@ -1,0 +1,9 @@
+thread
+	eat le temps demande
+	cycle think - eat - sleep - die
+	afficher ce quil se passe
+	meure de faim
+simulation
+fourchette
+fork
+time

@@ -8,7 +8,7 @@ HEADERS = philo.h
 
 all: $(NAME)
 
-$(NAME): $(OBJS) philo
+$(NAME): $(OBJS) 
 	$(CC) $(OBJS) -o $(NAME) $(CFLAGS)
 
 %.o: %.c
