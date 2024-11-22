@@ -7,3 +7,7 @@ simulation
 fourchette
 fork
 time
+
+faire fonctionner 2 philos en paralelle. 
+param -> philo numero 1, 2.
+faire apparaitre les activites des differents philos sur le terminal de facons distinctes

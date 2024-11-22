@@ -1,6 +1,6 @@
 NAME = philo
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra 
+CFLAGS = -Wall -Werror -Wextra -g -pthread
 
 SRC = $(wildcard *.c)
 OBJS = $(SRC:.c=.o)
