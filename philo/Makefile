@@ -2,22 +2,27 @@ NAME = philo
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -g -pthread
 
-SRC = $(wildcard *.c)
-OBJS = $(SRC:.c=.o)
-HEADERS = philo.h
+SRC = $(wildcard src/*.c)
+OBJDIR = obj
+OBJS = $(SRC:src/%.c=$(OBJDIR)/%.o)
+DEPS = $(OBJS:.o=.d)
 
 all: $(NAME)
 
-$(NAME): $(OBJS) 
-	$(CC) $(OBJS) -o $(NAME) $(CFLAGS)
+$(NAME): $(OBJS)
+	@$(CC) $(OBJS) -o $@ $(CFLAGS)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJDIR)/%.o: src/%.c
+	@mkdir -p $(OBJDIR)
+	@$(CC) $(CFLAGS) -MMD -c $< -o $@
+
+-include $(DEPS)
 
 clean:
-	rm -f $(OBJS)
+	@rm -f $(OBJS) $(DEPS)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
+	@rm -rf $(OBJDIR)
 
 re: fclean all
