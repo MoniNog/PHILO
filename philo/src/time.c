@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:18:09 by monoguei          #+#    #+#             */
-/*   Updated: 2024/11/24 18:11:02 by monoguei         ###   ########.fr       */
+/*   Updated: 2024/11/27 16:57:21 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,3 +23,5 @@ long	get_diff(struct timeval *start)
 	diff += (now.tv_usec - start->tv_usec) / 1000;
 	return (diff);
 }
+
+

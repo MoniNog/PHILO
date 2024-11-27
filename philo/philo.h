@@ -15,7 +15,8 @@ typedef	struct s_philo
 	int				id_philo;// numero du philo
 	int				activity; // 1 think, 2 eat, 3 sleep, 0 die
 	struct timeval	last_meal;
-	struct t_param	*param;
+	struct timeval	t0_simulation;
+	struct s_param	*param;
 }				t_philo;
 
 typedef struct s_param
@@ -29,7 +30,7 @@ typedef struct s_param
 }			t_param;
 
 void 	create_pthread(t_param *param);
-void	*activity(void *phil_id);
+void	*activity(void *arg);
 void	eat(t_param *param, t_philo *philo);
 void	sleeep(t_param *param, t_philo *philo);
 void	think(t_philo *philo);
