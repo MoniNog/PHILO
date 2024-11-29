@@ -8,6 +8,19 @@
 #include <string.h>
 #include <sys/time.h>
 
+#define COLOR_RESET   "\033[0m"
+#define COLOR_RED     "\033[31m"
+#define COLOR_GREEN   "\033[32m"
+#define COLOR_YELLOW  "\033[43m"
+#define COLOR_BLUE    "\033[34m"
+#define COLOR_GREY    "\033[30m"
+
+#define TAKING_FORK COLOR_YELLOW "has taken a fork 🍴 " COLOR_RESET
+#define EATING      COLOR_GREEN  "is eating 🍝 "        COLOR_RESET
+#define SLEEPING    COLOR_BLUE   "is sleeping 💤 "      COLOR_RESET
+#define THINKING    COLOR_GREY	 "is thinking 🤔 "      COLOR_RESET
+#define DEAD        COLOR_RED    "died 💀 "             COLOR_RESET
+
 struct s_param;
 
 typedef	struct s_philo
@@ -35,10 +48,10 @@ void	eat(t_param *param, t_philo *philo);
 void	sleeep(t_param *param, t_philo *philo);
 void	think(t_philo *philo);
 long	get_diff(struct timeval *start);
+void print_philosopher_state(long timestamp_in_ms, t_philo *philo, const char *state_message);
 
 
-
-
+// pthread_mutex_t print_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // typedef struct s_thread;
 // {

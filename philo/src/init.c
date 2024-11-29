@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2024/11/27 17:11:25 by monoguei         ###   ########.fr       */
+/*   Updated: 2024/11/29 09:01:44 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void create_pthread(t_param *param)
 	thread = malloc(sizeof(pthread_t *) * param->nb_philo);
 
 	i = 0;
-	printf("philo numero : %i\n", param->nb_philo);
 	while (i < param->nb_philo) // initialisation
 	{
 		param->philos[i].id_philo = i + 1;
@@ -56,7 +55,7 @@ int	dead_or_alive(t_param *param, t_philo *philo)
 	if (param->t_die <= get_diff(&philo->last_meal))
 	{
 		philo->activity = 0;
-		printf("\ttimestamp : %li\t\tphilo number %i\t\tis DEADDD\n", get_diff(&philo->t0_simulation), philo->id_philo);
+		print_philosopher_state(get_diff(&philo->t0_simulation), philo, DEAD);
 		return (0); // dead
 	}
 	else
