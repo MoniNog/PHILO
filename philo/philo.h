@@ -19,7 +19,12 @@
 #define EATING      COLOR_GREEN  "is eating 🍝 "        COLOR_RESET
 #define SLEEPING    COLOR_BLUE   "is sleeping 💤 "      COLOR_RESET
 #define THINKING    COLOR_GREY	 "is thinking 🤔 "      COLOR_RESET
-#define DEAD        COLOR_RED    "died 💀 "             COLOR_RESET
+#define PRINT_DEAD	COLOR_RED    "died 💀 "             COLOR_RESET
+
+#define THINK 1
+#define EAT 2
+#define SLEEP 3
+#define DEAD 0
 
 struct s_param;
 
@@ -28,22 +33,30 @@ typedef	struct s_philo
 	int				id_philo;// numero du philo
 	int				activity; // 1 think, 2 eat, 3 sleep, 0 die
 	struct timeval	last_meal;
-	struct timeval	t0_simulation;
-	struct s_param	*param;
+	struct timeval	t0_simulation; //to remove
+	struct s_param	*param; //to remove
 }				t_philo;
+
+typedef struct s_simulation
+{
+	struct s_param	*param;
+	struct timeval	t0_simulation;
+	t_philo			*philosophers;
+}					t_simulation;
+// PAS OUBLIER DE SUPPR DOUBLONS
 
 typedef struct s_param
 {
 	int		nb_philo;
-	t_philo	*philos;
 	long	t_die;
+	t_philo	*philos;// to remove
 	long	t_eat;
 	long	t_sleep;
 	long	times_each_philo_must_eat;
 }			t_param;
 
-void 	create_pthread(t_param *param);
-void	*activity(void *arg);
+void 	initialize_simulation(t_param *param);
+void	*routine(void *arg);
 void	eat(t_param *param, t_philo *philo);
 void	sleeep(t_param *param, t_philo *philo);
 void	think(t_philo *philo);

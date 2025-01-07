@@ -6,12 +6,15 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2024/11/27 15:53:53 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/07 12:05:08 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
+/// @brief atoi params and stock them in the struct t_param
+/// @param av param set in the command line (nb_philo, t_die, t_eat, t_sleep, (times_each_philo_must_eat))
+/// @return struct t_param where are stock the params.
 t_param	*parsing(char **av)
 {// check atoi nb positif uniquement
 	t_param	*param;
@@ -36,7 +39,7 @@ int main(int ac, char **av)
 	if (ac == 6 || ac == 5)
 	{
 		param = parsing(av);
-		create_pthread(param);
+		initialize_simulation(param);
 	}
 	return 0;
 }
