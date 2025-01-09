@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/09 10:41:49 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/09 16:53:46 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ void init_simulation(t_simulation *simulation, t_param *param, t_philo *philo)
 	(void)philo;
 
 	thread = malloc(sizeof(pthread_t *) * param->nb_philo);
+	if (!thread)
+		return ;
+
 	gettimeofday(&simulation->t0_simulation, NULL);// start simulation at time 0 
 
 	i = 0;
@@ -39,12 +42,13 @@ void init_simulation(t_simulation *simulation, t_param *param, t_philo *philo)
 		i++;
 	}
 
-	i = 0;
-	while (i < param->nb_philo) // attente
-	{
-		pthread_join(thread[i], NULL);
-		i++;
-	}
+	// i = 1;
+	// while (i - 1 < param->nb_philo) // attente
+	// {
+	// 	pthread_join(thread[i], NULL);
+	// write(1, "1\n", 2); // segv
+	// 	i++;
+	// }
 }
 
 /// @brief check if the philo is dead or alive comparing time passed since last meal

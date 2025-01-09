@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/09 10:51:36 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/09 16:30:31 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int main(int ac, char **av)
 {
 	t_simulation *simulation;
 
-	printf("1"); // segv
 	if (ac == 6 || ac == 5)
 	{
 		simulation = malloc(sizeof(t_simulation));
