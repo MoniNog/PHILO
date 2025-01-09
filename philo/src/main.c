@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/07 12:05:08 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/09 10:51:36 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,48 @@
 /// @brief atoi params and stock them in the struct t_param
 /// @param av param set in the command line (nb_philo, t_die, t_eat, t_sleep, (times_each_philo_must_eat))
 /// @return struct t_param where are stock the params.
-t_param	*parsing(char **av)
+t_param	*initialization_struct(char **av)
 {// check atoi nb positif uniquement
-	t_param	*param;
+	t_simulation	*simulation;
+	// t_param			*param;
+	// t_philo			*philo;
 
-	param = malloc(sizeof(t_param));
-	param->nb_philo = atoi(av[1]);
-	param->t_die = atoi(av[2]);
-	param->t_eat = atoi(av[3]);
-	param->t_sleep = atoi(av[4]);
-	param->philos = malloc(sizeof(t_philo) * param->nb_philo);
+	
+	simulation = malloc(sizeof(t_simulation));
+	if (!simulation)
+		return NULL;
+	simulation->param = malloc(sizeof(t_param));
+	if (!simulation->param)
+	{
+		free(simulation);
+		return NULL;
+	}
+	simulation->param->nb_philo = atoi(av[1]);
+	simulation->param->t_die = atoi(av[2]);
+	simulation->param->t_eat = atoi(av[3]);
+	simulation->param->t_sleep = atoi(av[4]);
+	simulation->philosophers = malloc(sizeof(t_philo) * simulation->param->nb_philo);
+	if (!simulation->philosophers)
+	{
+		free(simulation->param);
+		free(simulation);
+		return NULL;
+	}
 	if (av[5])
-		param->times_each_philo_must_eat = atoi(av[5]);
+		simulation->param->times_each_philo_must_eat = atoi(av[5]);
 	else
-		param->times_each_philo_must_eat = -1;
-	return (param);
+		simulation->param->times_each_philo_must_eat = -1;
+	return simulation->param;
 }
 
 int main(int ac, char **av)
 {
-	t_param *param; 
+	t_simulation *simulation;
 
 	if (ac == 6 || ac == 5)
 	{
-		param = parsing(av);
-		initialize_simulation(param);
+		simulation->param = initialization_struct(av);
+		init_simulation(simulation, simulation->param, simulation->philosophers);
 	}
 	return 0;
 }

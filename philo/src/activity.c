@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/07 12:16:12 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/08 19:13:27 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 /// @brief print EAT_state in term and start timer ... when time out, philo go to sleep
 /// @param param struct need for time to eat
 /// @param philo struct need for using the right philo
-void	eat(t_param *param, t_philo *philo)
+void	eat(t_simulation *simulation, t_param *param, t_philo *philo)
 {
-	print_philosopher_state(get_diff(&philo->t0_simulation), philo, EATING);
+	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
 	gettimeofday(&philo->last_meal, NULL);// ??
 	usleep(param->t_eat * 1000);
 	philo->activity = 3;
@@ -26,9 +26,9 @@ void	eat(t_param *param, t_philo *philo)
 /// @brief print SLEEP_state in the term and start timer. when time out, philo start thinking
 /// @param param need for time to sleep
 /// @param philo need for using the right philo
-void	sleeep(t_param *param, t_philo *philo)
+void	sleeep(t_simulation *simulation, t_param *param, t_philo *philo)
 {
-	print_philosopher_state(get_diff(&philo->t0_simulation), philo, SLEEPING);
+	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, SLEEPING);
 	usleep(param->t_sleep * 1000);
 	philo->activity = 1; 
 }
@@ -38,9 +38,9 @@ void	sleeep(t_param *param, t_philo *philo)
 
 /// @brief print THINK_stat in the term and ...
 /// @param philo need for using the right philo
-void	think(t_philo *philo)
+void	think(t_simulation *simulation, t_philo *philo)
 {
-    print_philosopher_state(get_diff(&philo->t0_simulation), philo, THINKING);
+    print_philosopher_state(get_diff(&simulation->t0_simulation), philo, THINKING);
 	usleep(10 * 1000);// FAUX
 	philo->activity = 2; 
 	// TODO : pick up fork 
