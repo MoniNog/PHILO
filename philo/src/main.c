@@ -15,16 +15,8 @@
 /// @brief atoi params and stock them in the struct t_param
 /// @param av param set in the command line (nb_philo, t_die, t_eat, t_sleep, (times_each_philo_must_eat))
 /// @return struct t_param where are stock the params.
-t_param	*initialization_struct(char **av)
+t_param	*initialization_struct(t_simulation *simulation, char **av)
 {// check atoi nb positif uniquement
-	t_simulation	*simulation;
-	// t_param			*param;
-	// t_philo			*philo;
-
-	
-	simulation = malloc(sizeof(t_simulation));
-	if (!simulation)
-		return NULL;
 	simulation->param = malloc(sizeof(t_param));
 	if (!simulation->param)
 	{
@@ -46,16 +38,20 @@ t_param	*initialization_struct(char **av)
 		simulation->param->times_each_philo_must_eat = atoi(av[5]);
 	else
 		simulation->param->times_each_philo_must_eat = -1;
-	return simulation->param;
+	return (simulation->param);
 }
 
 int main(int ac, char **av)
 {
 	t_simulation *simulation;
 
+	printf("1"); // segv
 	if (ac == 6 || ac == 5)
 	{
-		simulation->param = initialization_struct(av);
+		simulation = malloc(sizeof(t_simulation));
+		if (!simulation)
+			return 0;
+		simulation->param = initialization_struct(simulation, av);
 		init_simulation(simulation, simulation->param, simulation->philosophers);
 	}
 	return 0;
