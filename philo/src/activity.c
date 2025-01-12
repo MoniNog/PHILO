@@ -6,19 +6,22 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/08 19:13:27 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/10 10:26:18 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
+// time_to_die (in milliseconds): If a philosopher didn’t start eating time_to_die
+// milliseconds since the beginning of their last meal or the beginning of the sim-
+// ulation, they die.
 /// @brief print EAT_state in term and start timer ... when time out, philo go to sleep
 /// @param param struct need for time to eat
 /// @param philo struct need for using the right philo
 void	eat(t_simulation *simulation, t_param *param, t_philo *philo)
 {
 	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
-	gettimeofday(&philo->last_meal, NULL);// ??
+	gettimeofday(&philo->last_meal, NULL);
 	usleep(param->t_eat * 1000);
 	philo->activity = 3;
 }
@@ -32,9 +35,6 @@ void	sleeep(t_simulation *simulation, t_param *param, t_philo *philo)
 	usleep(param->t_sleep * 1000);
 	philo->activity = 1; 
 }
-// time_to_die (in milliseconds): If a philosopher didn’t start eating time_to_die
-// milliseconds since the beginning of their last meal or the beginning of the sim-
-// ulation, they die.
 
 /// @brief print THINK_stat in the term and ...
 /// @param philo need for using the right philo

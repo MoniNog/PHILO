@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/09 16:53:46 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/10 12:25:00 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,44 @@
 
 /// @brief set id philo, init first activity, create the threads, waiting (join ???) INIT THE SIMULATION
 /// @param param struct where are the philo's data
-void init_simulation(t_simulation *simulation, t_param *param, t_philo *philo)
+void init_simulation(t_simulation *simulation)
 {
-	pthread_t	*thread;
+	pthread_t	*threads;/// phtread * on essaie comme ca mais possible quon doit changer vers pthread **
 	int			i;
-	(void)philo;
 
-	thread = malloc(sizeof(pthread_t *) * param->nb_philo);
-	if (!thread)
+	threads = malloc(sizeof(pthread_t) * simulation->param->nb_philo);
+	if (!threads)
 		return ;
 
 	gettimeofday(&simulation->t0_simulation, NULL);// start simulation at time 0 
 
 	i = 0;
-	while (i < param->nb_philo) // initialisation
+	while (i < simulation->param->nb_philo) // initialisation
 	{
 		simulation->philosophers[i].id_philo = i + 1;
-		simulation->philosophers[i].activity = THINK;
+		simulation->philosophers[i].activity = THINK;//?SLEEP?
+		simulation->philosophers[i].simulation = simulation;
 	    gettimeofday(&simulation->philosophers[i].last_meal, NULL); // Initialiser last_meal avec l'heure actuelle
 		i++;
 	}
 
+
+
 	i = 0;
-	while (i < param->nb_philo) // lancement
+	while (i < simulation->param->nb_philo) // lancement
 	{
-		pthread_create(thread, NULL, routine, (void *)&simulation->philosophers[i]);
+		pthread_create(&(threads[i]), NULL, routine, (void *)&simulation->philosophers[i]);
 		i++;
 	}
 
-	// i = 1;
-	// while (i - 1 < param->nb_philo) // attente
-	// {
-	// 	pthread_join(thread[i], NULL);
-	// write(1, "1\n", 2); // segv
-	// 	i++;
-	// }
+	write(1, "1\n", 2); // segv
+
+	i = 0;
+	while (i < simulation->param->nb_philo) // attente
+	{
+		pthread_join(threads[i], NULL);
+		i++;
+	}
 }
 
 /// @brief check if the philo is dead or alive comparing time passed since last meal
@@ -71,11 +74,11 @@ int	dead_or_alive(t_simulation *simulation, t_param *param, t_philo *philo)
 /// @return (void *) determined by create_pthread
 void	*routine(void *arg)
 {
-	t_philo 	*philo;
-	t_simulation *simulation;
+	t_philo 		*philo;
+	t_simulation	*simulation;
 
 	philo = (t_philo *)arg;// cast
-	simulation = (t_simulation *)arg;
+	simulation = philo->simulation;// l'adresse simulation est maintenant la meme que philo->simulation
 	while (philo->activity != DEAD)
 	{	
 		if (dead_or_alive(simulation, simulation->param, philo) == 1)

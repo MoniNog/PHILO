@@ -30,29 +30,29 @@ struct s_param;
 
 typedef	struct s_philo
 {
-	int				id_philo;// numero du philo
-	int				activity; // 1 think, 2 eat, 3 sleep, 0 die
-	struct timeval	last_meal;
-}				t_philo;
+	int					id_philo;
+	int					activity;
+	struct timeval		last_meal;
+	struct s_simulation	*simulation;// pour utiliser routine (limitation par le prototype)
+}						t_philo;
 
 typedef struct s_simulation
 {
-	struct s_param	*param;
-	struct timeval	t0_simulation;
-	struct s_philo	*philosophers;
-}					t_simulation;
-// PAS OUBLIER DE SUPPR DOUBLONS
+	struct s_param		*param;
+	struct timeval		t0_simulation;
+	struct s_philo		*philosophers;
+}						t_simulation;
 
 typedef struct s_param
 {
-	int		nb_philo;
-	long	t_die;
-	long	t_eat;
-	long	t_sleep;
-	long	times_each_philo_must_eat;
-}			t_param;
+	int					nb_philo;
+	long				t_die;
+	long				t_eat;
+	long				t_sleep;
+	long				times_each_philo_must_eat;
+}						t_param;
 
-void 	init_simulation(t_simulation *simulation, t_param *param, t_philo *philo);
+void 	init_simulation(t_simulation *simulation);
 void	*routine(void *arg);
 void	eat(t_simulation *simulation, t_param *param, t_philo *philo);
 void	sleeep(t_simulation *simulation, t_param *param, t_philo *philo);
