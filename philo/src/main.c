@@ -6,27 +6,21 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/12 22:53:59 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/14 11:03:52 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-/// @brief Check if malloc success, free memory if malloc fail
+/// @brief Check if malloc success
 /// @param simulation 
 /// @return 0 : malloc fail, memory free | 1 : malloc success
-int	check_malloc_success(t_simulation *simulation)
+int	free_malloc(t_simulation *simulation)
 {
-	if (!simulation->philosophers)
-		free(simulation->philosophers); 
-	if (!simulation->param)
-		free(simulation->param);
-	if (!simulation)
-	{
-		free(simulation);
-		return (0);
-	}
-	return (1);
+	free(simulation->philosophers);
+	free(simulation->param);
+	free(simulation);
+	return (0);
 }
 
 /// @brief malloc struct, atoi params and stock them
@@ -40,21 +34,19 @@ t_simulation	*create_simulation(char **av)
 	if (!simulation)
 		return NULL;
 	simulation->param = malloc(sizeof(t_param));
-	if (check_malloc_success(simulation) == 1)
-	{
-		simulation->param->nb_philo = atoi(av[1]);
-		simulation->param->t_die = atoi(av[2]);
-		simulation->param->t_eat = atoi(av[3]);
-		simulation->param->t_sleep = atoi(av[4]);
-	}
+	if (!simulation->param)
+		return NULL;
+	simulation->param->nb_philo = atoi(av[1]);
+	simulation->param->t_die = atoi(av[2]);
+	simulation->param->t_eat = atoi(av[3]);
+	simulation->param->t_sleep = atoi(av[4]);
 	simulation->philosophers = malloc(sizeof(t_philo) * simulation->param->nb_philo);
-	if (check_malloc_success(simulation) == 1)
-	{
-		if (av[5] && atoi(av[5]) > 0)
-			simulation->param->times_each_philo_must_eat = atoi(av[5]);
-		else
-			simulation->param->times_each_philo_must_eat = -1;
-	}
+	if (!simulation->philosophers)
+		return NULL;
+	if (av[5] && atoi(av[5]) > 0)
+		simulation->param->times_each_philo_must_eat = atoi(av[5]);
+	else
+		simulation->param->times_each_philo_must_eat = -1;
 	return (simulation);
 }
 
@@ -69,5 +61,6 @@ int main(int ac, char **av)
 			return 0;
 		init_simulation(simulation);
 	}
+	free_malloc(simulation);
 	return 0;
 }

@@ -30,8 +30,10 @@ struct s_param;
 
 typedef	struct s_philo
 {
+	// pthread				*thread;
 	int					id_philo;
 	int					activity;
+	pthread_mutex_t		left_fork;
 	struct timeval		last_meal;
 	struct s_simulation	*simulation;// pour utiliser routine (limitation par le prototype)
 }						t_philo;

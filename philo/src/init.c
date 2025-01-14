@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/10 12:25:00 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:23:57 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void init_simulation(t_simulation *simulation)
 	pthread_t	*threads;/// phtread * on essaie comme ca mais possible quon doit changer vers pthread **
 	int			i;
 
+	// [_]	malloc dans create_simulation -> struct - creation thread sur chaque philo plutot que sur un seul grand tableau 
 	threads = malloc(sizeof(pthread_t) * simulation->param->nb_philo);
 	if (!threads)
 		return ;
@@ -35,16 +36,12 @@ void init_simulation(t_simulation *simulation)
 		i++;
 	}
 
-
-
 	i = 0;
 	while (i < simulation->param->nb_philo) // lancement
 	{
 		pthread_create(&(threads[i]), NULL, routine, (void *)&simulation->philosophers[i]);
 		i++;
 	}
-
-	write(1, "1\n", 2); // segv
 
 	i = 0;
 	while (i < simulation->param->nb_philo) // attente

@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/10 10:26:18 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:22:35 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,15 @@
 /// @brief print EAT_state in term and start timer ... when time out, philo go to sleep
 /// @param param struct need for time to eat
 /// @param philo struct need for using the right philo
-void	eat(t_simulation *simulation, t_param *param, t_philo *philo)
+void	eat(t_simulation *simulation, t_param *param, t_philo *philo)// to clean param [_]
 {
+	// pthread_mutex_lock(philo->left_fork);
+	
 	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
 	gettimeofday(&philo->last_meal, NULL);
 	usleep(param->t_eat * 1000);
+	// phtread_mutex_unlock(philo->left_fork);
+
 	philo->activity = 3;
 }
 
