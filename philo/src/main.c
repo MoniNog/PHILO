@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/14 11:03:52 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:38:55 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,14 @@
 /// @return 0 : malloc fail, memory free | 1 : malloc success
 int	free_malloc(t_simulation *simulation)
 {
+	int	i;
+
+	i = 0;
+	while(i < simulation->param->nb_philo)
+	{
+		free(simulation->philosophers[i].thread);
+		i++;
+	}	
 	free(simulation->philosophers);
 	free(simulation->param);
 	free(simulation);
@@ -28,7 +36,9 @@ int	free_malloc(t_simulation *simulation)
 /// @return simulation where are param with the values enter in the command line
 t_simulation	*create_simulation(char **av)
 {
-	t_simulation *simulation;
+	t_simulation	*simulation;
+	int				i;
+	// pthread_t	*threads;/// phtread * on essaie comme ca mais possible quon doit changer vers pthread **
 	
 	simulation = malloc(sizeof(t_simulation));
 	if (!simulation)
@@ -43,6 +53,13 @@ t_simulation	*create_simulation(char **av)
 	simulation->philosophers = malloc(sizeof(t_philo) * simulation->param->nb_philo);
 	if (!simulation->philosophers)
 		return NULL;
+	i = 0;
+	while (i < simulation->param->nb_philo)
+	{
+		simulation->philosophers[i].thread = malloc(sizeof(pthread_t));
+		if (!simulation->philosophers[i++].thread)
+			return NULL;
+	}
 	if (av[5] && atoi(av[5]) > 0)
 		simulation->param->times_each_philo_must_eat = atoi(av[5]);
 	else
@@ -57,9 +74,8 @@ int main(int ac, char **av)
 	if (ac == 6 || ac == 5)
 	{
 		simulation = create_simulation(av);
-		if (!simulation)
-			return 0;
-		init_simulation(simulation);
+		if (simulation)
+			init_simulation(simulation);
 	}
 	free_malloc(simulation);
 	return 0;

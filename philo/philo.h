@@ -36,6 +36,7 @@ typedef	struct s_philo
 	pthread_mutex_t		left_fork;
 	struct timeval		last_meal;
 	struct s_simulation	*simulation;// pour utiliser routine (limitation par le prototype)
+	pthread_t			*thread;
 }						t_philo;
 
 typedef struct s_simulation
@@ -56,8 +57,8 @@ typedef struct s_param
 
 void 	init_simulation(t_simulation *simulation);
 void	*routine(void *arg);
-void	eat(t_simulation *simulation, t_param *param, t_philo *philo);
-void	sleeep(t_simulation *simulation, t_param *param, t_philo *philo);
+void	eat(t_simulation *simulation, t_philo *philo);
+void	sleeep(t_simulation *simulation, t_philo *philo);
 void	think(t_simulation *simulation, t_philo *philo);
 long	get_diff(struct timeval *start);
 void 	print_philosopher_state(long timestamp_in_ms, t_philo *philo, const char *state_message);

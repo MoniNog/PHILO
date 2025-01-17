@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/14 12:22:35 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:32:38 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,20 @@
 /// @brief print EAT_state in term and start timer ... when time out, philo go to sleep
 /// @param param struct need for time to eat
 /// @param philo struct need for using the right philo
-void	eat(t_simulation *simulation, t_param *param, t_philo *philo)// to clean param [_]
+void	eat(t_simulation *simulation, t_philo *philo)
 {
-	// pthread_mutex_lock(philo->left_fork);
-	
+	int right_neighbour;
+	if (philo->id_philo == 1)
+		right_neighbour = simulation->param->nb_philo - 1;// philo de droite == dernier philo
+	else
+		right_neighbour = philo->id_philo - 2;// philo de droite
+	pthread_mutex_lock(&simulation->philosophers[right_neighbour].left_fork);
+	pthread_mutex_lock(&philo->left_fork);
 	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
 	gettimeofday(&philo->last_meal, NULL);
-	usleep(param->t_eat * 1000);
-	// phtread_mutex_unlock(philo->left_fork);
+	usleep(simulation->param->t_eat * 1000);
+	pthread_mutex_unlock(&philo->left_fork);
+	pthread_mutex_unlock(&simulation->philosophers[right_neighbour].left_fork);
 
 	philo->activity = 3;
 }
@@ -33,10 +39,10 @@ void	eat(t_simulation *simulation, t_param *param, t_philo *philo)// to clean pa
 /// @brief print SLEEP_state in the term and start timer. when time out, philo start thinking
 /// @param param need for time to sleep
 /// @param philo need for using the right philo
-void	sleeep(t_simulation *simulation, t_param *param, t_philo *philo)
+void	sleeep(t_simulation *simulation, t_philo *philo)
 {
 	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, SLEEPING);
-	usleep(param->t_sleep * 1000);
+	usleep(simulation->param->t_sleep * 1000);
 	philo->activity = 1; 
 }
 
@@ -61,5 +67,5 @@ void print_philosopher_state(long timestamp_in_ms, t_philo *philo, const char *s
 
     // pthread_mutex_lock(&print_mutex);
     printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
-    // pthread_mutex_unlock(&print_%mutex);
+    // pthread_mutex_unlock(&print_mutex);
 }

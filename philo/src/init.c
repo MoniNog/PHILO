@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/14 12:23:57 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:01:36 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 /// @brief set id philo, init first activity, create the threads, waiting (join ???) INIT THE SIMULATION
 /// @param param struct where are the philo's data
+
+
+/// @brief set T0, 
+/// @param simulation 
 void init_simulation(t_simulation *simulation)
 {
-	pthread_t	*threads;/// phtread * on essaie comme ca mais possible quon doit changer vers pthread **
+	// pthread_t	*threads;/// phtread * on essaie comme ca mais possible quon doit changer vers pthread **
 	int			i;
 
 	// [_]	malloc dans create_simulation -> struct - creation thread sur chaque philo plutot que sur un seul grand tableau 
-	threads = malloc(sizeof(pthread_t) * simulation->param->nb_philo);
-	if (!threads)
-		return ;
 
 	gettimeofday(&simulation->t0_simulation, NULL);// start simulation at time 0 
 
@@ -30,7 +31,7 @@ void init_simulation(t_simulation *simulation)
 	while (i < simulation->param->nb_philo) // initialisation
 	{
 		simulation->philosophers[i].id_philo = i + 1;
-		simulation->philosophers[i].activity = THINK;//?SLEEP?
+		simulation->philosophers[i].activity = THINK;//?SLEEP? -> Non car ils commencent par vouloir manger donc THINK
 		simulation->philosophers[i].simulation = simulation;
 	    gettimeofday(&simulation->philosophers[i].last_meal, NULL); // Initialiser last_meal avec l'heure actuelle
 		i++;
@@ -39,14 +40,14 @@ void init_simulation(t_simulation *simulation)
 	i = 0;
 	while (i < simulation->param->nb_philo) // lancement
 	{
-		pthread_create(&(threads[i]), NULL, routine, (void *)&simulation->philosophers[i]);
+		pthread_create(simulation->philosophers[i].thread, NULL, routine, (void *)&simulation->philosophers[i]);
 		i++;
 	}
 
 	i = 0;
 	while (i < simulation->param->nb_philo) // attente
 	{
-		pthread_join(threads[i], NULL);
+		pthread_join(*simulation->philosophers[i].thread, NULL);
 		i++;
 	}
 }
@@ -55,9 +56,9 @@ void init_simulation(t_simulation *simulation)
 /// @param param struct needed for time to dead to compare with last meal
 /// @param philo struct + indication WHICH philo we are talking about
 /// @return 0 dead | 1 alive
-int	dead_or_alive(t_simulation *simulation, t_param *param, t_philo *philo)
+int	dead_or_alive(t_simulation *simulation, t_philo *philo)
 {
-	if (param->t_die <= get_diff(&philo->last_meal))
+	if (simulation->param->t_die <= get_diff(&philo->last_meal))
 	{
 		philo->activity = 0;
 		print_philosopher_state(get_diff(&simulation->t0_simulation), philo, PRINT_DEAD);
@@ -78,14 +79,14 @@ void	*routine(void *arg)
 	simulation = philo->simulation;// l'adresse simulation est maintenant la meme que philo->simulation
 	while (philo->activity != DEAD)
 	{	
-		if (dead_or_alive(simulation, simulation->param, philo) == 1)
+		if (dead_or_alive(simulation, philo) == 1)
 		{
 			if (philo->activity == THINK)
 				think(simulation, philo);
 			else if (philo->activity == EAT)
-				eat(simulation, simulation->param, philo);
+				eat(simulation, philo);
 			else if (philo->activity == SLEEP)
-				sleeep(simulation, simulation->param, philo);
+				sleeep(simulation, philo);
 		}
 		else
 			philo->activity = DEAD; 
