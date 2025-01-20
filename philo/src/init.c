@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/20 20:26:50 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/20 20:49:19 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,7 @@ void init_simulation(t_simulation *simulation)
 /// @return 0 dead | 1 alive
 int	dead_or_alive(t_simulation *simulation, t_philo *philo)
 {
-	if (simulation->param->t_die <= get_diff(&philo->last_meal) &&
-		simulation->philosophers->meals_eaten >= simulation->param->times_each_philo_must_eat)
+	if (simulation->param->t_die <= get_diff(&philo->last_meal))
 	{
 		philo->activity = DEAD;
 		print_philosopher_state(get_diff(&simulation->t0_simulation), philo, PRINT_DEAD);

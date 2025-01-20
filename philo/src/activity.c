@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/20 20:14:03 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/20 20:51:08 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,25 @@ void	eat(t_simulation *simulation, t_philo *philo)
 		right_neighbour = simulation->param->nb_philo - 1;// philo de droite == dernier philo
 	else
 		right_neighbour = philo->id_philo - 2;// philo de droite
-	pthread_mutex_lock(&simulation->philosophers[right_neighbour].left_fork);
-	pthread_mutex_lock(&philo->left_fork);
-	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
-	gettimeofday(&philo->last_meal, NULL);
-	usleep(simulation->param->t_eat * 1000);
-	pthread_mutex_unlock(&philo->left_fork);
-	pthread_mutex_unlock(&simulation->philosophers[right_neighbour].left_fork);
-	if (simulation->param->times_each_philo_must_eat != -1)
-		philo->meals_eaten++;
-	philo->activity = 3;
+	if (simulation->philosophers->meals_eaten <= simulation->param->times_each_philo_must_eat)
+	{
+		pthread_mutex_lock(&simulation->philosophers[right_neighbour].left_fork);
+		pthread_mutex_lock(&philo->left_fork);
+		print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
+		gettimeofday(&philo->last_meal, NULL);
+		usleep(simulation->param->t_eat * 1000);
+		pthread_mutex_unlock(&philo->left_fork);
+		pthread_mutex_unlock(&simulation->philosophers[right_neighbour].left_fork);
+		if (simulation->param->times_each_philo_must_eat != -1)
+		{
+			printf("\tNumber of meal : %i", philo->meals_eaten);
+			printf("\t\tNumber of max meal : %li\n", simulation->param->times_each_philo_must_eat);
+			philo->meals_eaten++;
+		}
+		philo->activity = 3;
+	}
+	else
+		simulation->status = 0;
 }
 
 /// @brief print SLEEP_state in the term and start timer. when time out, philo start thinking
