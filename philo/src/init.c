@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/17 12:01:36 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/20 20:26:50 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,16 @@ void init_simulation(t_simulation *simulation)
 	    gettimeofday(&simulation->philosophers[i].last_meal, NULL); // Initialiser last_meal avec l'heure actuelle
 		i++;
 	}
-
+	simulation->status = 1;
 	i = 0;
 	while (i < simulation->param->nb_philo) // lancement
 	{
+		if (simulation->philosophers->id_philo % 2 == 1)
+			usleep(100);
+		usleep(i * 100);
 		pthread_create(simulation->philosophers[i].thread, NULL, routine, (void *)&simulation->philosophers[i]);
+		if (simulation->param->times_each_philo_must_eat != -1)
+			simulation->philosophers[i].meals_eaten = 0;
 		i++;
 	}
 
@@ -58,10 +63,13 @@ void init_simulation(t_simulation *simulation)
 /// @return 0 dead | 1 alive
 int	dead_or_alive(t_simulation *simulation, t_philo *philo)
 {
-	if (simulation->param->t_die <= get_diff(&philo->last_meal))
+	if (simulation->param->t_die <= get_diff(&philo->last_meal) &&
+		simulation->philosophers->meals_eaten >= simulation->param->times_each_philo_must_eat)
 	{
-		philo->activity = 0;
+		philo->activity = DEAD;
 		print_philosopher_state(get_diff(&simulation->t0_simulation), philo, PRINT_DEAD);
+		simulation->status = 0;
+		// printf("STOP\n");
 		return (0);
 	}
 	return (1);
@@ -88,9 +96,10 @@ void	*routine(void *arg)
 			else if (philo->activity == SLEEP)
 				sleeep(simulation, philo);
 		}
-		else
-			philo->activity = DEAD; 
+		else 
+			break ;
 	}
+	// free_malloc(simulation);
 	return (NULL);
 }
 

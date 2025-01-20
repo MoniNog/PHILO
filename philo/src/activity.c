@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/17 12:32:38 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/20 20:14:03 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ void	eat(t_simulation *simulation, t_philo *philo)
 	usleep(simulation->param->t_eat * 1000);
 	pthread_mutex_unlock(&philo->left_fork);
 	pthread_mutex_unlock(&simulation->philosophers[right_neighbour].left_fork);
-
+	if (simulation->param->times_each_philo_must_eat != -1)
+		philo->meals_eaten++;
 	philo->activity = 3;
 }
 
@@ -63,9 +64,12 @@ void	think(t_simulation *simulation, t_philo *philo)
 void print_philosopher_state(long timestamp_in_ms, t_philo *philo, const char *state_message)
 {
     struct timeval t0_simulation;
-    gettimeofday(&t0_simulation, NULL);
-
-    // pthread_mutex_lock(&print_mutex);
-    printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
-    // pthread_mutex_unlock(&print_mutex);
+	
+	if (philo->simulation->status == 1)
+	{
+    	gettimeofday(&t0_simulation, NULL);
+    	// pthread_mutex_lock(philo->id_philo);
+    	printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
+    	// pthread_mutex_unlock(philo->id_philo);
+	}
 }
