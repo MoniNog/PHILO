@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/20 20:36:11 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:41:55 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int main(int ac, char **av)
 	{
 		simulation = create_simulation(av);
 		if (simulation->param->nb_philo == 1)
-			printf("\t\t0\t\tPhilo n°1\t\tdied 💀\n");
+			printf("\t0\tPhilo n°1\t\tdied 💀\n");
 		else
 			if (simulation)
 				init_simulation(simulation);

@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/20 20:51:08 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/21 12:12:43 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,26 @@ void	eat(t_simulation *simulation, t_philo *philo)
 		right_neighbour = simulation->param->nb_philo - 1;// philo de droite == dernier philo
 	else
 		right_neighbour = philo->id_philo - 2;// philo de droite
-	if (simulation->philosophers->meals_eaten <= simulation->param->times_each_philo_must_eat)
+	if (simulation->param->times_each_philo_must_eat == -1 ||
+		simulation->philosophers->meals_eaten <= simulation->param->times_each_philo_must_eat) // check repas en trop
 	{
 		pthread_mutex_lock(&simulation->philosophers[right_neighbour].left_fork);
-		pthread_mutex_lock(&philo->left_fork);
-		print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
-		gettimeofday(&philo->last_meal, NULL);
-		usleep(simulation->param->t_eat * 1000);
-		pthread_mutex_unlock(&philo->left_fork);
-		pthread_mutex_unlock(&simulation->philosophers[right_neighbour].left_fork);
-		if (simulation->param->times_each_philo_must_eat != -1)
+		if (dead_or_alive(simulation, philo) == 1)
 		{
-			printf("\tNumber of meal : %i", philo->meals_eaten);
-			printf("\t\tNumber of max meal : %li\n", simulation->param->times_each_philo_must_eat);
-			philo->meals_eaten++;
+			pthread_mutex_lock(&philo->left_fork);
+			print_philosopher_state(get_diff(&simulation->t0_simulation), philo, TAKING_FORK);
+			print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
+			gettimeofday(&philo->last_meal, NULL);
+			usleep(simulation->param->t_eat * 1000);
+			pthread_mutex_unlock(&philo->left_fork);
+			if (simulation->param->times_each_philo_must_eat != -1)
+				philo->meals_eaten++;
+			philo->activity = SLEEP;
 		}
-		philo->activity = 3;
+		pthread_mutex_unlock(&simulation->philosophers[right_neighbour].left_fork);
 	}
-	else
-		simulation->status = 0;
+	else// assez mange, end of game without dead
+		simulation->status = OFF;
 }
 
 /// @brief print SLEEP_state in the term and start timer. when time out, philo start thinking
@@ -53,7 +54,7 @@ void	sleeep(t_simulation *simulation, t_philo *philo)
 {
 	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, SLEEPING);
 	usleep(simulation->param->t_sleep * 1000);
-	philo->activity = 1; 
+	philo->activity = THINK; 
 }
 
 /// @brief print THINK_stat in the term and ...
@@ -61,9 +62,7 @@ void	sleeep(t_simulation *simulation, t_philo *philo)
 void	think(t_simulation *simulation, t_philo *philo)
 {
     print_philosopher_state(get_diff(&simulation->t0_simulation), philo, THINKING);
-	usleep(10 * 1000);// FAUX
-	philo->activity = 2; 
-	// TODO : pick up fork 
+	philo->activity = EAT; 
 }
 
 /// @brief print in the term > timestamp since start of simulation, wich philo, what he does
@@ -74,11 +73,10 @@ void print_philosopher_state(long timestamp_in_ms, t_philo *philo, const char *s
 {
     struct timeval t0_simulation;
 	
-	if (philo->simulation->status == 1)
+	if (philo->simulation->status == ON)
 	{
     	gettimeofday(&t0_simulation, NULL);
-    	// pthread_mutex_lock(philo->id_philo);
     	printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
-    	// pthread_mutex_unlock(philo->id_philo);
+		//{_} if ()dead or alive == mort -> status = 0
 	}
 }

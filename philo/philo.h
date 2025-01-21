@@ -11,20 +11,23 @@
 #define COLOR_RESET   "\033[0m"
 #define COLOR_RED     "\033[31m"
 #define COLOR_GREEN   "\033[32m"
-#define COLOR_YELLOW  "\033[43m"
+#define COLOR_YELLOW  "\033[93m"
 #define COLOR_BLUE    "\033[34m"
 #define COLOR_GREY    "\033[30m"
 
-#define TAKING_FORK COLOR_YELLOW "has taken a fork 🍴 " COLOR_RESET
-#define EATING      COLOR_GREEN  "is eating 🍝 "        COLOR_RESET
-#define SLEEPING    COLOR_BLUE   "is sleeping 💤 "      COLOR_RESET
-#define THINKING    COLOR_GREY	 "is thinking 🤔 "      COLOR_RESET
-#define PRINT_DEAD	COLOR_RED    "died 💀 "             COLOR_RESET
+#define TAKING_FORK COLOR_YELLOW "has taken a fork 🍴" COLOR_RESET
+#define EATING      COLOR_GREEN  "    is eating 🍝 "      COLOR_RESET
+#define SLEEPING    COLOR_BLUE   "  is sleeping 💤 "      COLOR_RESET
+#define THINKING    COLOR_GREY	 "  is thinking 🤔 "      COLOR_RESET
+#define PRINT_DEAD	COLOR_RED    "         died 💀 "      COLOR_RESET
 
 #define THINK 1
 #define EAT 2
 #define SLEEP 3
 #define DEAD 0
+#define ALIVE 1
+#define OFF 0
+#define ON 1
 
 struct s_param;
 
@@ -58,7 +61,10 @@ typedef struct s_param
 }						t_param;
 
 void 	init_simulation(t_simulation *simulation);
+
 void	*routine(void *arg);
+int		dead_or_alive(t_simulation *simulation, t_philo *philo);
+
 void	eat(t_simulation *simulation, t_philo *philo);
 void	sleeep(t_simulation *simulation, t_philo *philo);
 void	think(t_simulation *simulation, t_philo *philo);
