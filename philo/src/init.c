@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/21 11:00:54 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:52:58 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void init_simulation(t_simulation *simulation)
 {
 	// pthread_t	*threads;/// phtread * on essaie comme ca mais possible quon doit changer vers pthread **
 	int			i;
-
-	// [_]	malloc dans create_simulation -> struct - creation thread sur chaque philo plutot que sur un seul grand tableau 
 
 	gettimeofday(&simulation->t0_simulation, NULL);// start simulation at time 0 
 

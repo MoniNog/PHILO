@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/21 12:12:43 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/29 18:09:38 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,18 +65,21 @@ void	think(t_simulation *simulation, t_philo *philo)
 	philo->activity = EAT; 
 }
 
+
 /// @brief print in the term > timestamp since start of simulation, wich philo, what he does
 /// @param timestamp_in_ms to print the time since the begin of the simulation
 /// @param philo to use the right philo and the right data stock in his struct
 /// @param state_message to print the right activity, macro in philo.h
-void print_philosopher_state(long timestamp_in_ms, t_philo *philo, const char *state_message)
+void print_philosopher_state(long timestamp_in_ms, t_philo *philo, char *state_message)
 {
     struct timeval t0_simulation;
 	
 	if (philo->simulation->status == ON)
 	{
     	gettimeofday(&t0_simulation, NULL);
-    	printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
+		pthread_mutex_lock(&philo->simulation->print_mutex);
+		printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
+		pthread_mutex_unlock(&philo->simulation->print_mutex);
 		//{_} if ()dead or alive == mort -> status = 0
 	}
 }

@@ -29,7 +29,6 @@
 #define OFF 0
 #define ON 1
 
-struct s_param;
 
 typedef	struct s_philo
 {
@@ -49,6 +48,7 @@ typedef struct s_simulation
 	struct timeval		t0_simulation;
 	struct s_philo		*philosophers;
 	int					status; // 0 OFF | 1 ON
+	pthread_mutex_t		print_mutex;
 }						t_simulation;
 
 typedef struct s_param
@@ -60,6 +60,7 @@ typedef struct s_param
 	long				times_each_philo_must_eat;
 }						t_param;
 
+
 void 	init_simulation(t_simulation *simulation);
 
 void	*routine(void *arg);
@@ -68,18 +69,12 @@ int		dead_or_alive(t_simulation *simulation, t_philo *philo);
 void	eat(t_simulation *simulation, t_philo *philo);
 void	sleeep(t_simulation *simulation, t_philo *philo);
 void	think(t_simulation *simulation, t_philo *philo);
+
 long	get_diff(struct timeval *start);
-void 	print_philosopher_state(long timestamp_in_ms, t_philo *philo, const char *state_message);
+
+void 	print_philosopher_state(long timestamp_in_ms, t_philo *philo, char *state_message);
+
 int		free_malloc(t_simulation *simulation);
 
-
-// pthread_mutex_t print_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-// typedef struct s_thread;
-// {
-// 	pthread_t	thread;
-// 	int			etat;
-// 	pmutex_t	mutexl	
-// }				t_thread;
 
 #endif
