@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/29 15:52:58 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:24:58 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void init_simulation(t_simulation *simulation)
 			simulation->philosophers[i].meals_eaten = 0;
 		i++;
 	}
+
+	pthread_mutex_init(&simulation->print_mutex, NULL);// ?
 
 	i = 0;
 	while (i < simulation->param->nb_philo) // attente

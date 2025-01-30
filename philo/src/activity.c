@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/29 18:09:38 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:20:18 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,15 @@ void	think(t_simulation *simulation, t_philo *philo)
 /// @param state_message to print the right activity, macro in philo.h
 void print_philosopher_state(long timestamp_in_ms, t_philo *philo, char *state_message)
 {
-    struct timeval t0_simulation;
+    // struct timeval t0_simulation;
 	
 	if (philo->simulation->status == ON)
 	{
-    	gettimeofday(&t0_simulation, NULL);
+    	// gettimeofday(&t0_simulation, NULL);
 		pthread_mutex_lock(&philo->simulation->print_mutex);
 		printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
+		if (dead_or_alive(philo->simulation, philo) == DEAD)
+			philo->simulation = OFF;
 		pthread_mutex_unlock(&philo->simulation->print_mutex);
 		//{_} if ()dead or alive == mort -> status = 0
 	}

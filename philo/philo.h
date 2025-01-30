@@ -15,7 +15,7 @@
 #define COLOR_BLUE    "\033[34m"
 #define COLOR_GREY    "\033[30m"
 
-#define TAKING_FORK COLOR_YELLOW "has taken a fork 🍴" COLOR_RESET
+#define TAKING_FORK COLOR_YELLOW "has taken a fork 🍴" 	  COLOR_RESET
 #define EATING      COLOR_GREEN  "    is eating 🍝 "      COLOR_RESET
 #define SLEEPING    COLOR_BLUE   "  is sleeping 💤 "      COLOR_RESET
 #define THINKING    COLOR_GREY	 "  is thinking 🤔 "      COLOR_RESET

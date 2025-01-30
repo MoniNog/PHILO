@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/21 10:41:55 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:24:34 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	free_malloc(t_simulation *simulation)
 	}	
 	free(simulation->philosophers);
 	free(simulation->param);
+	pthread_mutex_destroy(&simulation->print_mutex);// ??
 	free(simulation);
 	return (0);
 }
@@ -75,7 +76,9 @@ int main(int ac, char **av)
 	{
 		simulation = create_simulation(av);
 		if (simulation->param->nb_philo == 1)
-			printf("\t0\tPhilo n°1\t\tdied 💀\n");
+		{
+			printf("\t0\tPhilo n°1\t%s\n\t0\tPhilo n°1\t%s\n\t%s\tPhilo n°1\t%s\n", THINKING, TAKING_FORK, av[2], PRINT_DEAD);
+		}
 		else
 			if (simulation)
 				init_simulation(simulation);
