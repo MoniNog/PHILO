@@ -28,6 +28,7 @@
 #define ALIVE 1
 #define OFF 0
 #define ON 1
+#define NO_PARAM -1
 
 
 typedef	struct s_philo

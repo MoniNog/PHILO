@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:54:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/21 12:10:14 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:02:56 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	*routine(void *arg)
 		else 
 			break ;
 	}
+	if (simulation->status == OFF)
+		printf("Status == OFF | Philo n°%i, hahahaha il est mort avant moi !\n", philo->id_philo);
 	// free_malloc(simulation);
 	return (NULL);
 }

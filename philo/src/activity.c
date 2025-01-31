@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/30 16:20:18 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:28:41 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ void	eat(t_simulation *simulation, t_philo *philo)
 		right_neighbour = simulation->param->nb_philo - 1;// philo de droite == dernier philo
 	else
 		right_neighbour = philo->id_philo - 2;// philo de droite
-	if (simulation->param->times_each_philo_must_eat == -1 ||
+	if (simulation->param->times_each_philo_must_eat == NO_PARAM ||
 		simulation->philosophers->meals_eaten <= simulation->param->times_each_philo_must_eat) // check repas en trop
 	{
 		pthread_mutex_lock(&simulation->philosophers[right_neighbour].left_fork);
-		if (dead_or_alive(simulation, philo) == 1)
+		if (dead_or_alive(simulation, philo) == ALIVE)
 		{
 			pthread_mutex_lock(&philo->left_fork);
 			print_philosopher_state(get_diff(&simulation->t0_simulation), philo, TAKING_FORK);
@@ -37,7 +37,7 @@ void	eat(t_simulation *simulation, t_philo *philo)
 			gettimeofday(&philo->last_meal, NULL);
 			usleep(simulation->param->t_eat * 1000);
 			pthread_mutex_unlock(&philo->left_fork);
-			if (simulation->param->times_each_philo_must_eat != -1)
+			if (simulation->param->times_each_philo_must_eat != NO_PARAM)
 				philo->meals_eaten++;
 			philo->activity = SLEEP;
 		}
@@ -72,16 +72,12 @@ void	think(t_simulation *simulation, t_philo *philo)
 /// @param state_message to print the right activity, macro in philo.h
 void print_philosopher_state(long timestamp_in_ms, t_philo *philo, char *state_message)
 {
-    // struct timeval t0_simulation;
 	
-	if (philo->simulation->status == ON)
+	if (philo->simulation->status == ON)// pourquoi ca ne suffit pas pour eviter lecriture lorsque le status est OFF ?
 	{
-    	// gettimeofday(&t0_simulation, NULL);
 		pthread_mutex_lock(&philo->simulation->print_mutex);
-		printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
-		if (dead_or_alive(philo->simulation, philo) == DEAD)
-			philo->simulation = OFF;
+		if (philo->simulation->status == ON)
+			printf("%9ld \tPhilo n°%-7d %s\n", timestamp_in_ms, philo->id_philo, state_message);
 		pthread_mutex_unlock(&philo->simulation->print_mutex);
-		//{_} if ()dead or alive == mort -> status = 0
 	}
 }

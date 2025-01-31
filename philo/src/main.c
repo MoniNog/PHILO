@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/30 16:24:34 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:56:27 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	free_malloc(t_simulation *simulation)
 	}	
 	free(simulation->philosophers);
 	free(simulation->param);
-	pthread_mutex_destroy(&simulation->print_mutex);// ??
 	free(simulation);
 	return (0);
 }
@@ -40,7 +39,9 @@ t_simulation	*create_simulation(char **av)
 	t_simulation	*simulation;
 	int				i;
 	// pthread_t	*threads;/// phtread * on essaie comme ca mais possible quon doit changer vers pthread **
-	
+	/*
+[_]	si un param est neg, return null 
+	// && av[2] > 0 && av[3] > 0 && av[4] > 0 && av[5] > 0 && av[6] > 0 */
 	simulation = malloc(sizeof(t_simulation));
 	if (!simulation)
 		return NULL;
@@ -75,14 +76,17 @@ int main(int ac, char **av)
 	if (ac == 6 || ac == 5)
 	{
 		simulation = create_simulation(av);
-		if (simulation->param->nb_philo == 1)
+		simulation = NULL;
+		if (simulation)
 		{
-			printf("\t0\tPhilo n°1\t%s\n\t0\tPhilo n°1\t%s\n\t%s\tPhilo n°1\t%s\n", THINKING, TAKING_FORK, av[2], PRINT_DEAD);
-		}
-		else
-			if (simulation)
+			if (simulation->param->nb_philo == 1)
+//	[_] 	faut que le 1 philo passe aussi les tests de validite des params
+// 			si simulation == NULL -> segv
+				printf("\t0\tPhilo n°1\t%s\n\t0\tPhilo n°1\t%s\n\t%s\tPhilo n°1\t%s\n", THINKING, TAKING_FORK, av[2], PRINT_DEAD);
+			else
 				init_simulation(simulation);
+			free_malloc(simulation);
+		}
 	}
-	free_malloc(simulation);
 	return 0;
 }
