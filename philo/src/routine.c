@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:54:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/31 11:02:56 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:32:30 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	*routine(void *arg)
 	simulation = philo->simulation;// l'adresse simulation est maintenant la meme que philo->simulation
 	while (philo->simulation->status == ON)
 	{	
+		// if EVERYONE ARE ALIVE ???
 		if (dead_or_alive(simulation, philo) == ALIVE)
 		{
 			if (philo->activity == THINK)
@@ -52,8 +53,5 @@ void	*routine(void *arg)
 		else 
 			break ;
 	}
-	if (simulation->status == OFF)
-		printf("Status == OFF | Philo n°%i, hahahaha il est mort avant moi !\n", philo->id_philo);
-	// free_malloc(simulation);
 	return (NULL);
 }

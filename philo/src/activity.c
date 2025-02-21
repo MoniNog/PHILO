@@ -6,11 +6,20 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/01/31 11:28:41 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:26:28 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+// int	check_loop(t_simulation *simulation, t_philo *philo)
+// {
+// 	while (dead_or_alive(simulation, philo) == ALIVE)
+// 	{
+		
+// 	}
+	
+// }
 
 // time_to_die (in milliseconds): If a philosopher didn’t start eating time_to_die
 // milliseconds since the beginning of their last meal or the beginning of the sim-
@@ -28,7 +37,10 @@ void	eat(t_simulation *simulation, t_philo *philo)
 	if (simulation->param->times_each_philo_must_eat == NO_PARAM ||
 		simulation->philosophers->meals_eaten <= simulation->param->times_each_philo_must_eat) // check repas en trop
 	{
+		//	check_loop
+		
 		pthread_mutex_lock(&simulation->philosophers[right_neighbour].left_fork);
+		
 		if (dead_or_alive(simulation, philo) == ALIVE)
 		{
 			pthread_mutex_lock(&philo->left_fork);

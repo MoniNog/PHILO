@@ -29,6 +29,8 @@
 #define OFF 0
 #define ON 1
 #define NO_PARAM -1
+#define TRUE 1
+#define FALSE 0
 
 
 typedef	struct s_philo
