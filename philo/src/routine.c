@@ -6,11 +6,25 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:54:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/02/21 10:32:30 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:20:06 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+/// @brief calculate the diff between now and the start parameter 
+/// @param start starting time (T0)
+/// @return diff in millisecond since time T0 and now
+long	get_diff(struct timeval *start)
+{
+	struct timeval	now;
+	long			diff;
+
+	gettimeofday(&now, NULL);
+	diff = (now.tv_sec - start->tv_sec) * 1000;
+	diff += (now.tv_usec - start->tv_usec) / 1000;
+	return (diff);
+}
 
 /// @brief check if the philo is dead or alive comparing time passed since last meal
 /// @param param struct needed for time to dead to compare with last meal

@@ -31,7 +31,8 @@
 #define NO_PARAM -1
 #define TRUE 1
 #define FALSE 0
-
+#define LOCKED 1
+#define UNLOCKED 0
 
 typedef	struct s_philo
 {
@@ -39,6 +40,7 @@ typedef	struct s_philo
 	int					id_philo;
 	int					activity;
 	pthread_mutex_t		left_fork;
+	int					state_fork;//LOCKED / UNLOCKED
 	struct timeval		last_meal;
 	struct s_simulation	*simulation;// pour utiliser routine (limitation par le prototype)
 	pthread_t			*thread;
@@ -63,21 +65,17 @@ typedef struct s_param
 	long				times_each_philo_must_eat;
 }						t_param;
 
-
 void 	init_simulation(t_simulation *simulation);
-
 void	*routine(void *arg);
 int		dead_or_alive(t_simulation *simulation, t_philo *philo);
-
 void	eat(t_simulation *simulation, t_philo *philo);
 void	sleeep(t_simulation *simulation, t_philo *philo);
 void	think(t_simulation *simulation, t_philo *philo);
-
 long	get_diff(struct timeval *start);
-
 void 	print_philosopher_state(long timestamp_in_ms, t_philo *philo, char *state_message);
-
 int		free_malloc(t_simulation *simulation);
+int 	param_are_valid(char **av);
+t_simulation	*create_simulation(char **av);
 
 
 #endif

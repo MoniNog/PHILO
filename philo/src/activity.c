@@ -6,20 +6,11 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/02/21 10:26:28 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/02/23 15:50:22 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-// int	check_loop(t_simulation *simulation, t_philo *philo)
-// {
-// 	while (dead_or_alive(simulation, philo) == ALIVE)
-// 	{
-		
-// 	}
-	
-// }
 
 // time_to_die (in milliseconds): If a philosopher didn’t start eating time_to_die
 // milliseconds since the beginning of their last meal or the beginning of the sim-
@@ -38,22 +29,33 @@ void	eat(t_simulation *simulation, t_philo *philo)
 		simulation->philosophers->meals_eaten <= simulation->param->times_each_philo_must_eat) // check repas en trop
 	{
 		//	check_loop
-		
+		// tant que la fork nest pas libre,
+		// verifier si dead or alive
+		// fork bloquee en attendant 
+		while (philo->state_fork == LOCKED)// tant que la fork est locked...
+		{
+			usleep(10);
+			if (dead_or_alive(simulation, philo) == DEAD)// check si dead or alive, si dead sort de la boucle
+				break;
+		}
 		pthread_mutex_lock(&simulation->philosophers[right_neighbour].left_fork);
-		
+		simulation->philosophers[right_neighbour].state_fork = LOCKED;
 		if (dead_or_alive(simulation, philo) == ALIVE)
 		{
 			pthread_mutex_lock(&philo->left_fork);
+			philo->state_fork = LOCKED;
 			print_philosopher_state(get_diff(&simulation->t0_simulation), philo, TAKING_FORK);
 			print_philosopher_state(get_diff(&simulation->t0_simulation), philo, EATING);
 			gettimeofday(&philo->last_meal, NULL);
 			usleep(simulation->param->t_eat * 1000);
+			philo->state_fork = UNLOCKED;
 			pthread_mutex_unlock(&philo->left_fork);
 			if (simulation->param->times_each_philo_must_eat != NO_PARAM)
 				philo->meals_eaten++;
 			philo->activity = SLEEP;
 		}
 		pthread_mutex_unlock(&simulation->philosophers[right_neighbour].left_fork);
+		simulation->philosophers[right_neighbour].state_fork = UNLOCKED;
 	}
 	else// assez mange, end of game without dead
 		simulation->status = OFF;
@@ -85,7 +87,7 @@ void	think(t_simulation *simulation, t_philo *philo)
 void print_philosopher_state(long timestamp_in_ms, t_philo *philo, char *state_message)
 {
 	
-	if (philo->simulation->status == ON)// pourquoi ca ne suffit pas pour eviter lecriture lorsque le status est OFF ?
+	if (philo->simulation->status == ON)
 	{
 		pthread_mutex_lock(&philo->simulation->print_mutex);
 		if (philo->simulation->status == ON)
