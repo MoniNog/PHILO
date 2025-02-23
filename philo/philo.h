@@ -32,7 +32,8 @@
 #define TRUE 1
 #define FALSE 0
 #define LOCKED 1
-#define UNLOCKED 0
+#define UNLOCKED 0	
+#define ONE_PHILO "\t0\tPhilo n°1\t%s\n\t0\tPhilo n°1\t%s\n\t%s\tPhilo n°1\t%s\n"
 
 typedef	struct s_philo
 {
