@@ -34,6 +34,7 @@
 #define LOCKED 1
 #define UNLOCKED 0	
 #define ONE_PHILO "\t0\tPhilo n°1\t%s\n\t0\tPhilo n°1\t%s\n\t%s\tPhilo n°1\t%s\n"
+#define PRINT print_philosopher_state
 
 typedef	struct s_philo
 {
@@ -66,6 +67,11 @@ typedef struct s_param
 	long				times_each_philo_must_eat;
 }						t_param;
 
+//	MAIN
+int 	param_are_valid(char **av);
+//	INIT
+int		free_malloc(t_simulation *simulation);
+
 void 	init_simulation(t_simulation *simulation);
 void	*routine(void *arg);
 int		dead_or_alive(t_simulation *simulation, t_philo *philo);
@@ -74,8 +80,6 @@ void	sleeep(t_simulation *simulation, t_philo *philo);
 void	think(t_simulation *simulation, t_philo *philo);
 long	get_diff(struct timeval *start);
 void 	print_philosopher_state(long timestamp_in_ms, t_philo *philo, char *state_message);
-int		free_malloc(t_simulation *simulation);
-int 	param_are_valid(char **av);
 t_simulation	*create_simulation(char **av);
 
 

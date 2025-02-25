@@ -6,15 +6,12 @@
 /*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/02/22 17:14:18 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/02/25 10:29:47 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-/// @brief Check if malloc success
-/// @param simulation 
-/// @return 0 : malloc fail, memory free | 1 : malloc success
 int	free_malloc(t_simulation *simulation)
 {
 	int	i;
@@ -37,27 +34,22 @@ void init_philo(t_simulation *simulation)
 {
 	int	i;
 	i = 0;
-	while (i < simulation->param->nb_philo) // initialisation
+	while (i < simulation->param->nb_philo)
 	{
 		simulation->philosophers[i].id_philo = i + 1;
-		simulation->philosophers[i].activity = THINK;//?SLEEP? -> Non car ils commencent par vouloir manger donc THINK
+		simulation->philosophers[i].activity = THINK;
 		simulation->philosophers[i].simulation = simulation;
-	    gettimeofday(&simulation->philosophers[i].last_meal, NULL); // Initialiser last_meal avec l'heure actuelle
+	    gettimeofday(&simulation->philosophers[i].last_meal, NULL);
 		i++;
 	}
 }
 
-/// @brief set id philo, init first activity, create the threads, waiting (join ???) INIT THE SIMULATION
-/// @param param struct where are the philo's data
-/// @brief set T0, 
-/// @param simulation 
 void init_simulation(t_simulation *simulation)
 {
 	int			i;
 
 	pthread_mutex_init(&simulation->print_mutex, NULL);
 	gettimeofday(&simulation->t0_simulation, NULL);// start simulation at time 0 
-
 	init_philo(simulation);
 	simulation->status = 1;
 	i = 0;
@@ -78,9 +70,6 @@ void init_simulation(t_simulation *simulation)
 	}
 }
 
-/// @brief malloc struct, atoi params and stock them
-/// @param av param set in the command line (nb_philo, t_die, t_eat, t_sleep, (times_each_philo_must_eat))
-/// @return simulation where are param with the values enter in the command line
 t_simulation	*create_simulation(char **av)
 {
 	t_simulation	*simulation;
