@@ -1,50 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/25 11:04:46 by monoguei          #+#    #+#             */
+/*   Updated: 2025/02/25 11:37:53 by monoguei         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/time.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <pthread.h>
+# include <unistd.h>
+# include <string.h>
+# include <sys/time.h>
 
-#define COLOR_RESET   "\033[0m"
-#define COLOR_RED     "\033[31m"
-#define COLOR_GREEN   "\033[32m"
-#define COLOR_YELLOW  "\033[93m"
-#define COLOR_BLUE    "\033[34m"
-#define COLOR_GREY    "\033[30m"
+# define C_R   "\033[0m"
+# define COLOR_RED     "\033[31m"
+# define COLOR_GR      "\033[32m"
+# define COLOR_YELLOW  "\033[93m"
+# define COLOR_BLUE    "\033[34m"
+# define COLOR_GREY    "\033[30m"
 
-#define TAKING_FORK COLOR_YELLOW "has taken a fork 🍴" 	  COLOR_RESET
-#define EATING      COLOR_GREEN  "    is eating 🍝 "      COLOR_RESET
-#define SLEEPING    COLOR_BLUE   "  is sleeping 💤 "      COLOR_RESET
-#define THINKING    COLOR_GREY	 "  is thinking 🤔 "      COLOR_RESET
-#define PRINT_DEAD	COLOR_RED    "         died 💀 "      COLOR_RESET
+# define TAKING_FORK "has taken a fork 🍴"
+# define EATING      "    is eating 🍝 "
+# define SLEEPING    "  is sleeping 💤 "
+# define THINKING    "  is thinking 🤔 "
+# define PRINT_DEAD  "         died 💀 "
 
-#define THINK 1
-#define EAT 2
-#define SLEEP 3
-#define DEAD 0
-#define ALIVE 1
-#define OFF 0
-#define ON 1
-#define NO_PARAM -1
-#define TRUE 1
-#define FALSE 0
-#define LOCKED 1
-#define UNLOCKED 0	
-#define ONE_PHILO "\t0\tPhilo n°1\t%s\n\t0\tPhilo n°1\t%s\n\t%s\tPhilo n°1\t%s\n"
-#define PRINT print_philosopher_state
+# define THINK 1
+# define EAT 2
+# define SLEEP 3
+# define DEAD 0
+# define ALIVE 1
+# define OFF 0
+# define ON 1
+# define NO_PARAM -1
+# define TRUE 1
+# define FALSE 0
+# define LOCKED 1
+# define UNLOCKED 0
 
-typedef	struct s_philo
+typedef struct s_philo
 {
-	// pthread				*thread;
 	int					id_philo;
 	int					activity;
 	pthread_mutex_t		left_fork;
-	int					state_fork;//LOCKED / UNLOCKED
+	int					state_fork;
 	struct timeval		last_meal;
-	struct s_simulation	*simulation;// pour utiliser routine (limitation par le prototype)
+	struct s_simulation	*simulation;
 	pthread_t			*thread;
 	int					meals_eaten;
 }						t_philo;
@@ -54,7 +63,7 @@ typedef struct s_simulation
 	struct s_param		*param;
 	struct timeval		t0_simulation;
 	struct s_philo		*philosophers;
-	int					status; // 0 OFF | 1 ON
+	int					status;
 	pthread_mutex_t		print_mutex;
 }						t_simulation;
 
@@ -68,19 +77,20 @@ typedef struct s_param
 }						t_param;
 
 //	MAIN
-int 	param_are_valid(char **av);
+int				param_are_valid(char **av);
 //	INIT
-int		free_malloc(t_simulation *simulation);
-
-void 	init_simulation(t_simulation *simulation);
-void	*routine(void *arg);
-int		dead_or_alive(t_simulation *simulation, t_philo *philo);
-void	eat(t_simulation *simulation, t_philo *philo);
-void	sleeep(t_simulation *simulation, t_philo *philo);
-void	think(t_simulation *simulation, t_philo *philo);
-long	get_diff(struct timeval *start);
-void 	print_philosopher_state(long timestamp_in_ms, t_philo *philo, char *state_message);
+int				free_malloc(t_simulation *simulation);
+void			init_simulation(t_simulation *simulation);
 t_simulation	*create_simulation(char **av);
-
+//	ACTIVITY
+void			eat(t_simulation *simulation, t_philo *philo);
+void			sleeep(t_simulation *simulation, t_philo *philo);
+void			think(t_simulation *simulation, t_philo *philo);
+void			pr_s(long timestamp_in_ms, t_philo *philo,
+					char *state_message);
+//	ROUTINE
+long			get_diff(struct timeval *start);
+int				dead_or_alive(t_simulation *simulation, t_philo *philo);
+void			*routine(void *arg);
 
 #endif

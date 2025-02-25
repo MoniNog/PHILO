@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   activity.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/02/24 11:05:14 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:37:53 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
 
 void	eat_loop(t_simulation *simulation, t_philo *philo, int right_neighbour)
 {
@@ -19,7 +18,7 @@ void	eat_loop(t_simulation *simulation, t_philo *philo, int right_neighbour)
 	{
 		usleep(10);
 		if (dead_or_alive(simulation, philo) == DEAD)
-			break;
+			break ;
 	}
 	pthread_mutex_lock(&simulation->philosophers[right_neighbour].left_fork);
 	simulation->philosophers[right_neighbour].state_fork = LOCKED;
@@ -27,8 +26,9 @@ void	eat_loop(t_simulation *simulation, t_philo *philo, int right_neighbour)
 	{
 		pthread_mutex_lock(&philo->left_fork);
 		philo->state_fork = LOCKED;
-		PRINT(get_diff(&simulation->t0_simulation), philo, TAKING_FORK);
-		PRINT(get_diff(&simulation->t0_simulation), philo, EATING);
+		pr_s(get_diff(&simulation->t0_simulation), philo, COLOR_YELLOW
+			TAKING_FORK C_R);
+		pr_s(get_diff(&simulation->t0_simulation), philo, COLOR_GR EATING C_R);
 		gettimeofday(&philo->last_meal, NULL);
 		usleep(simulation->param->t_eat * 1000);
 		philo->state_fork = UNLOCKED;
@@ -44,13 +44,14 @@ void	eat_loop(t_simulation *simulation, t_philo *philo, int right_neighbour)
 void	eat(t_simulation *simulation, t_philo *philo)
 {
 	int	right_neighbour;
+
 	if (philo->id_philo == 1)
 		right_neighbour = simulation->param->nb_philo - 1;
 	else
-		right_neighbour = philo->id_philo - 2;// philo de droite
-	if (simulation->param->times_each_philo_must_eat == NO_PARAM ||
-		simulation->philosophers->meals_eaten <=
-		simulation->param->times_each_philo_must_eat)
+		right_neighbour = philo->id_philo - 2;
+	if (simulation->param->times_each_philo_must_eat == NO_PARAM
+		|| simulation->philosophers->meals_eaten
+		<= simulation->param->times_each_philo_must_eat)
 		eat_loop(simulation, philo, right_neighbour);
 	else
 		simulation->status = OFF;
@@ -58,20 +59,20 @@ void	eat(t_simulation *simulation, t_philo *philo)
 
 void	sleeep(t_simulation *simulation, t_philo *philo)
 {
-	print_philosopher_state(get_diff(&simulation->t0_simulation), philo, 
-		SLEEPING);
+	pr_s(get_diff(&simulation->t0_simulation), philo,
+		COLOR_BLUE SLEEPING C_R);
 	usleep(simulation->param->t_sleep * 1000);
-	philo->activity = THINK; 
+	philo->activity = THINK;
 }
 
 void	think(t_simulation *simulation, t_philo *philo)
 {
-    print_philosopher_state(get_diff(&simulation->t0_simulation), philo,
-		THINKING);
-	philo->activity = EAT; 
+	pr_s(get_diff(&simulation->t0_simulation), philo,
+		COLOR_GREY THINKING C_R);
+	philo->activity = EAT;
 }
 
-void	print_philosopher_state(long timestamp_in_ms, t_philo *philo, 
+void	pr_s(long timestamp_in_ms, t_philo *philo,
 	char *state_message)
 {
 	if (philo->simulation->status == ON)

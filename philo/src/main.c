@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@lausanne42.ch>          +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/02/23 17:12:00 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/02/25 11:24:28 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,11 @@ int	main(int ac, char **av)
 		if (simulation)
 		{
 			if (simulation->param->nb_philo == 1)
-				printf(ONE_PHILO, THINKING, TAKING_FORK, av[2], PRINT_DEAD);
+			{
+				printf("\t0\tPhilo n°1\t%s\n", THINKING);
+				printf("\t0\tPhilo n°1\t%s\n", TAKING_FORK);
+				printf("\t%s\tPhilo n°1\t%s\n", av[2], PRINT_DEAD);
+			}
 			else
 				init_simulation(simulation);
 			free_malloc(simulation);
