@@ -1,0 +1,56 @@
+Que se passe-t-il si tu enlèves les appels à 
+	pthread_mutex_lock et pthread_mutex_unlock
+	(verrouillage/déverrouillage) ?
+		Sans les appels a lock/unlock, parfois 
+		le compte est incorrect (inferieur)
+Pourquoi protège-t-on la variable count avec 
+	un mutex (pourquoi faut-il verrouiller) ?
+		Le verrouillage permet d'incrementer le 
+		compte (counter.count) sans que les deux
+		threads se marchent dessus et "oublient"
+		des iterations. 
+Comment vérifier (en “bidouillant” le code)
+	qu’un seul thread accède à count à la fois ?
+Que se passe-t-il si tu mets le pthread_mutex_lock
+	à l’extérieur de la boucle while (et le 
+	déverrouillage après la boucle) ?
+		Le compte de depart du deuxieme thread
+		est variable. Par consequent, le compte 
+		final du deuxieme thread est egalement
+		variable.
+Est-ce qu’inverser l’ordre du lock et unlock 
+	(ou les oublier) peut créer des erreurs 
+	imprévisibles (condition de course) ?
+		boucle infinie...
+À quel moment exact le thread principal peut-il
+	lire counter.count sans verrou et pourquoi 
+	c’est sans risque ici ?
+		apres les pthread_join car les
+		threads sont unis et la routine 
+		terminee. 
+		Le counter.count ne peut donc plus 
+		etre modifie via la routine. 
+
+
+Q1 : Sans verrous
+
+Tu as bien compris que sans lock/unlock, le résultat peut être inférieur car les incréments se chevauchent.
+Q2 : Pourquoi utiliser un mutex
+
+Ta réponse est juste : le mutex empêche les deux threads de modifier la variable en même temps pour éviter qu'une incrémentation ne soit “oubliée”.
+Q3 : Vérifier qu’un seul thread accède à count
+
+Tu n’as pas donné de réponse ici. Une astuce simple : ajouter des printf avant et après le verrou pour voir quel thread passe et quand.
+Q4 : Lock en dehors de la boucle
+
+Ton idée que le départ variable du deuxième thread entraîne un résultat variable n’est pas exactement ça.
+En verrouillant avant la boucle, le premier thread bloque l’accès pendant tout son incrément, ce qui rend les opérations de l’autre thread séquentielles (pas de concurrence).
+Le résultat final sera correct mais le bénéfice du parallélisme est perdu ; le deuxième thread attendra que le premier ait fini.
+Q5 : Inverser lock et unlock
+
+Tu dis “boucle infinie”. En fait, si l’ordre est inversé ou si on oublie de verrouiller, cela peut créer une situation de deadlock (blocage total) ou une condition de course (résultat imprévisible).
+Ce n’est pas forcément une boucle infinie, mais bien des comportements imprévus et des erreurs difficiles à reproduire.
+Q6 : Lire counter.count sans verrou
+
+Ta réponse est exacte : après pthread_join, les threads sont terminés, donc aucun accès concurrent à counter.count n’est possible.
+En résumé, tes réponses sur Q1, Q2 et Q6 sont bonnes. Pour Q4 et Q5, pense à préciser que verrouiller tout le temps (hors boucle) force l'exécution en série (et donc limite la concurrence) et qu'un mauvais ordre de lock/unlock mène à des problèmes comme le deadlock ou la condition de course, pas nécessairement à une boucle infinie.

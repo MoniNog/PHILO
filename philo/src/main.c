@@ -3,23 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/02/25 11:24:28 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/03/23 16:52:31 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+int isdigit_str(char *str)
+{
+	while (*str)
+	{
+		if (*str < '0' || *str > '9')
+			return (FALSE);
+		str++;
+	}
+	return (TRUE);
+}
 
 int	param_are_valid(char **av)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	while (av[i])
 	{
-		if (atoi(av[i]) < 0)
+		if (!isdigit_str(av[i]) || atoi(av[i]) < 0)
 			return (FALSE);
 		else
 			i++;
@@ -31,7 +41,7 @@ int	main(int ac, char **av)
 {
 	t_simulation	*simulation;
 
-	if (ac == 6 || ac == 5)
+	if ((ac == 6 && atoi(av[5]) != 0) || ac == 5 )
 	{
 		simulation = create_simulation(av);
 		if (simulation)
