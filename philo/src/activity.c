@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/03/23 17:03:03 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/03/24 10:36:10 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,14 @@ void	eat(t_simulation *simulation, t_philo *philo)
 		|| simulation->philosophers->meals_eaten
 		<= simulation->param->times_each_philo_must_eat)
 		{	
-			while (philo->state_fork == LOCKED)
+			while (philo->state_fork == LOCKED || 
+				simulation->philosophers[right_neighbour].state_fork == LOCKED)
 			{
-				usleep(10);
+				usleep(1);
 				if (dead_or_alive(simulation, philo) == DEAD)
 					break ;
 			}
+			// si je suis plus haut que mes voisins dans la file dattente, 
 			eat_loop(simulation, philo, right_neighbour);
 		}
 	else
@@ -66,6 +68,7 @@ void	sleeep(t_simulation *simulation, t_philo *philo)
 	pr_s(get_diff(&simulation->t0_simulation), philo,
 		COLOR_BLUE SLEEPING C_R);
 	usleep(simulation->param->t_sleep * 1000);
+	//inscrire dans file dattente
 	philo->activity = THINK;
 }
 

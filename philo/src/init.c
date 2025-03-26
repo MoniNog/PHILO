@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/02/25 11:25:01 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/03/23 21:18:38 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-int	free_malloc(t_simulation *simulation)
-{
-	int	i;
-
-	i = 0;
-	while (i < simulation->param->nb_philo)
-	{
-		pthread_mutex_destroy(&simulation->philosophers[i].left_fork);
-		free(simulation->philosophers[i].thread);
-		i++;
-	}
-	free(simulation->philosophers);
-	free(simulation->param);
-	pthread_mutex_destroy(&simulation->print_mutex);
-	free(simulation);
-	return (0);
-}
 
 void	init_philo(t_simulation *simulation)
 {
@@ -44,25 +26,51 @@ void	init_philo(t_simulation *simulation)
 		i++;
 	}
 }
+void	loop_create_philo(t_simulation *simulation)
+{
+	int	i;
+
+	i = 0;
+	if (i % 2 == 0)
+	{
+		while (i < simulation->param->nb_philo)
+		{
+			pthread_create(simulation->philosophers[i].thread, NULL, routine,
+				(void *)&simulation->philosophers[i]);
+			if (simulation->param->times_each_philo_must_eat != NO_PARAM)
+				simulation->philosophers[i].meals_eaten = 0;
+			pthread_mutex_init(&simulation->philosophers[i].left_fork, NULL);
+			i = i + 2;
+		}
+	}
+	usleep(10);
+	i = 1;
+	if (i % 2 == 1)
+	{
+		while (i < simulation->param->nb_philo)
+		{
+			pthread_create(simulation->philosophers[i].thread, NULL, routine,
+				(void *)&simulation->philosophers[i]);
+			if (simulation->param->times_each_philo_must_eat != NO_PARAM)
+				simulation->philosophers[i].meals_eaten = 0;
+			pthread_mutex_init(&simulation->philosophers[i].left_fork, NULL);
+			i = i + 2;
+		}
+	}
+
+}
+
 
 void	init_simulation(t_simulation *simulation)
 {
-	int			i;
+	int	i;
 
 	pthread_mutex_init(&simulation->print_mutex, NULL);
 	gettimeofday(&simulation->t0_simulation, NULL);
 	init_philo(simulation);
 	simulation->status = 1;
-	i = 0;
-	while (i < simulation->param->nb_philo)
-	{
-		pthread_create(simulation->philosophers[i].thread, NULL, routine,
-			(void *)&simulation->philosophers[i]);
-		if (simulation->param->times_each_philo_must_eat != NO_PARAM)
-			simulation->philosophers[i].meals_eaten = 0;
-		pthread_mutex_init(&simulation->philosophers[i].left_fork, NULL);
-		i++;
-	}
+	loop_create_philo(simulation);
+
 	i = 0;
 	while (i < simulation->param->nb_philo)
 	{

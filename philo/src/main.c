@@ -6,11 +6,30 @@
 /*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/03/23 16:52:31 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/03/23 21:11:48 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+int	free_malloc(t_simulation *simulation)
+{
+	int	i;
+
+	i = 0;
+	while (i < simulation->param->nb_philo)
+	{
+		pthread_mutex_destroy(&simulation->philosophers[i].left_fork);
+		free(simulation->philosophers[i].thread);
+		i++;
+	}
+	free(simulation->philosophers);
+	free(simulation->param);
+	pthread_mutex_destroy(&simulation->print_mutex);
+	free(simulation);
+	return (0);
+}
+
 int isdigit_str(char *str)
 {
 	while (*str)
