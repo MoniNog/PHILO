@@ -6,88 +6,56 @@
 /*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 22:01:08 by monoguei          #+#    #+#             */
-/*   Updated: 2025/03/24 11:25:30 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/03/26 21:01:23 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
-void	filter(char *s, char *x)
+void  filter(char *s, char *x)
 {
-	int i;
-	int len_x;
-	int a;
-	int len_s;
+	int i = 0;
+	int len_x = strlen(x);
+	int a = 0;
+	int len_s = strlen(s);
 	int start;
 
-	len_s = strlen(s);
-	i = 0;
-	len_x = strlen(x);
-	a = 0;
 	while (i < len_s)
 	{
-		if (x[a] == s[i])
+		a = 0;
+		start = i;
+		while (a < len_x && i < len_s && x[a] == s[i])
 		{
-			start = i;
-			while (x[a] == s[i])// bonne sequence ?
-			{
-				i++;
-				a++;
-			}
-			if (!x[a])// bonne sequence !
-			{
-				while(a > 0)
-				{
-					a--;
-					// printf("\n s[i] : %c\t", s[i]);
-					// printf("\tx[a] : %c\t", x[a]);
-					// printf("a : %i\t", a);
-					printf("*");
-				}
-			}
-			else
-				i = start;
-			a = 0;
+			i++;
+			a++;
 		}
-		
-		// printf("\n s[i] : %c\t", s[i]);
-		// printf("x[a] : %c\t\t", x[a]);
-		// printf("a : %i\t", a);
+		if (a == len_x)
+		{
+			for (int j = 0; j < len_x; j++)
+				printf("*");
+			continue; // évite l'affichage double
+		}
+		else
+			i = start; // réinitialise i à start en cas d'échec
 		printf("%c", s[i]);
 		i++;
 	}
 }
 
-int	main(int ac, char **av)
+int   main(int ac, char **av)
 {
-	if (ac == 3)
-		printf(" input : %s\n", av[1]);
-		printf("output : ");
-		filter(av[1], av[2]);
-		printf("\n");
-	return (0);
+	  if (ac == 2)
+	  {
+		char  *buf = malloc(sizeof(char) * 100);
+
+		int bytes_read = read(0, buf, 99);
+		buf[bytes_read] = '\0';
+		filter(buf, av[1]);
+		// filter(av[1], av[2]);
+		free(buf);
+	  }
+	  return (0);
 }
-
-// # Tests simples
-// ./a.out "bonjour" "jour"
-// ./a.out "abc_xyz_abc" "abc"
-// ./a.out "coucou" "cou"
-// ./a.out "aaaaa" "aaa"
-// ./a.out "patate" "patate"
-
-// # Tests avancés
-// ./a.out "testtestabc" "abc"
-// ./a.out "abcabcabc" "abc"
-// ./a.out "abcabcdabc" "abcd"
-// ./a.out "ababababa" "aba"
-
-// # Cas particuliers
-// ./a.out "aucunrapport" "xyz"
-// ./a.out "" "abc"
-// ./a.out "abc" ""
-// ./a.out "abc" "abcd"
-
-// # Caractères spéciaux
-// ./a.out "123#@!abc#@!" "abc"
