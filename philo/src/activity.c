@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/03/24 10:36:10 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/07 10:34:27 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,13 @@ void	eat_loop(t_simulation *simulation, t_philo *philo, int right_neighbour)
 void	eat(t_simulation *simulation, t_philo *philo)
 {
 	int	right_neighbour;
+	int	left_neighbour;
 
 	if (philo->id_philo == 1)
+	{
 		right_neighbour = simulation->param->nb_philo - 1;
+		left_neighbour = simulation->param->nb_philo + 1;
+	}
 	else
 		right_neighbour = philo->id_philo - 2;
 	if (simulation->param->times_each_philo_must_eat == NO_PARAM
@@ -56,8 +60,12 @@ void	eat(t_simulation *simulation, t_philo *philo)
 				if (dead_or_alive(simulation, philo) == DEAD)
 					break ;
 			}
-			// si je suis plus haut que mes voisins dans la file dattente, 
-			eat_loop(simulation, philo, right_neighbour);
+			// if right_neighbour
+			if (simulation->philosophers[right_neighbour].meals_eaten >= philo->meals_eaten || simulation->philosophers[left_neighbour].meals_eaten <= philo->meals_eaten)
+					eat_loop(simulation, philo, right_neighbour);
+					// comparer avec meals_eaten
+					// mod avec philo_id pour adapter.
+				// si je suis plus haut que mes voisins dans la file dattente, 
 		}
 	else
 		simulation->status = OFF;
@@ -68,7 +76,6 @@ void	sleeep(t_simulation *simulation, t_philo *philo)
 	pr_s(get_diff(&simulation->t0_simulation), philo,
 		COLOR_BLUE SLEEPING C_R);
 	usleep(simulation->param->t_sleep * 1000);
-	//inscrire dans file dattente
 	philo->activity = THINK;
 }
 

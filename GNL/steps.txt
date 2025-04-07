@@ -1,5 +1,0 @@
-gerer le buffer quand \n est au milieu
-gerer la recuperation de ce qui suit le \n
-gerer fin de fichier
-
-voir subject pour corner case
