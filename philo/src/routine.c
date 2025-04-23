@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:54:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/02/25 11:37:53 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:16:02 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,29 @@ int	dead_or_alive(t_simulation *simulation, t_philo *philo)
 		philo->activity = DEAD;
 		pr_s(get_diff(&simulation->t0_simulation),
 			philo, COLOR_RED PRINT_DEAD C_R);
-		simulation->status = OFF;
+		pthread_mutex_lock(&simulation->status_mutex);
+		simulation->status = OFF;// proteger modification avec mutex
+		pthread_mutex_unlock(&simulation->status_mutex);
 		return (DEAD);
 	}
 	return (ALIVE);
 }
 
+int ft_check_status(t_simulation *simulation)
+{
+	pthread_mutex_lock(&simulation->status_mutex);
+	if (simulation->status == ON)
+	{
+		pthread_mutex_unlock(&simulation->status_mutex);
+		return ON;
+	}
+	else
+	{
+		pthread_mutex_unlock(&simulation->status_mutex);
+		return OFF;
+	}
+	
+}
 void	*routine(void *arg)
 {
 	t_philo			*philo;
@@ -43,7 +60,7 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	simulation = philo->simulation;
-	while (philo->simulation->status == ON)
+	while (ft_check_status(simulation) == ON)// while (ft_check status whit mutex)
 	{	
 		if (dead_or_alive(simulation, philo) == ALIVE)
 		{

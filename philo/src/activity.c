@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   activity.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 18:10:50 by monoguei          #+#    #+#             */
-/*   Updated: 2025/04/07 10:34:27 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:53:45 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,24 +48,23 @@ void	eat(t_simulation *simulation, t_philo *philo)
 		left_neighbour = simulation->param->nb_philo + 1;
 	}
 	else
+	{
 		right_neighbour = philo->id_philo - 2;
+		left_neighbour = philo->id_philo;//segv
+	}	
 	if (simulation->param->times_each_philo_must_eat == NO_PARAM
 		|| simulation->philosophers->meals_eaten
 		<= simulation->param->times_each_philo_must_eat)
 		{	
-			while (philo->state_fork == LOCKED || 
+			while (philo->state_fork == LOCKED &&
 				simulation->philosophers[right_neighbour].state_fork == LOCKED)
 			{
 				usleep(1);
 				if (dead_or_alive(simulation, philo) == DEAD)
 					break ;
 			}
-			// if right_neighbour
 			if (simulation->philosophers[right_neighbour].meals_eaten >= philo->meals_eaten || simulation->philosophers[left_neighbour].meals_eaten <= philo->meals_eaten)
 					eat_loop(simulation, philo, right_neighbour);
-					// comparer avec meals_eaten
-					// mod avec philo_id pour adapter.
-				// si je suis plus haut que mes voisins dans la file dattente, 
 		}
 	else
 		simulation->status = OFF;

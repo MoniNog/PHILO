@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/04/07 10:37:11 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:45:29 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,22 @@ void	init_simulation(t_simulation *simulation)
 	int	i;
 
 	i = 0;
-	pthread_mutex_init(&simulation->print_mutex, NULL);
+	if (pthread_mutex_init(&simulation->print_mutex, NULL) != 0 || 
+			pthread_mutex_init(&simulation->status_mutex, NULL) != 0)
+				return ;
 	gettimeofday(&simulation->t0_simulation, NULL);
 	init_philo(simulation);
 	simulation->status = 1;
 	while (i < simulation->param->nb_philo)
 	{
-		
 		if (simulation->philosophers[i].id_philo % 2 == 1)
-			usleep(10);
+			usleep(100);
 		pthread_create(simulation->philosophers[i].thread, NULL, routine,
 			(void *)&simulation->philosophers[i]);
 		if (simulation->param->times_each_philo_must_eat != NO_PARAM)
 			simulation->philosophers[i].meals_eaten = 0;
-		pthread_mutex_init(&simulation->philosophers[i].left_fork, NULL);
+		if (pthread_mutex_init(&simulation->philosophers[i].left_fork, NULL) != 0)
+			return ;
 		i++;
 	}
 	i = 0;
@@ -56,7 +58,7 @@ void	init_simulation(t_simulation *simulation)
 	}
 }
 
-void	create_philo(char **av, t_simulation *simulation)
+void	create_param_struct(char **av, t_simulation *simulation)
 {
 	simulation->param = malloc(sizeof(t_param));
 	if (!simulation->param)
@@ -75,6 +77,9 @@ t_simulation	*create_simulation(char **av)
 {
 	t_simulation	*simulation;
 	int				i;
+	int				cinquieme;
+	if (av[5])
+		cinquieme = atoi(av[5]);
 
 	if (param_are_valid(av) == TRUE)
 	{
@@ -82,15 +87,16 @@ t_simulation	*create_simulation(char **av)
 		if (!simulation)
 			return (NULL);
 		i = 0;
-		create_philo(av, simulation);
+		create_param_struct(av, simulation);
 		while (i < simulation->param->nb_philo)
 		{
 			simulation->philosophers[i].thread = malloc(sizeof(pthread_t));
 			if (!simulation->philosophers[i++].thread)
 				return (NULL);
 		}
-		if (av[5] && atoi(av[5]) > 0)
-			simulation->param->times_each_philo_must_eat = atoi(av[5]);
+		printf("5eme : %i\n", cinquieme);
+		if (cinquieme > 0)
+			simulation->param->times_each_philo_must_eat = cinquieme;
 		else
 			simulation->param->times_each_philo_must_eat = -1;
 		return (simulation);

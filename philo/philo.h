@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:04:46 by monoguei          #+#    #+#             */
-/*   Updated: 2025/03/31 10:09:27 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:10:14 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_simulation
 	struct timeval		t0_simulation;
 	struct s_philo		*philosophers;
 	int					status;
+	pthread_mutex_t		status_mutex;
 	pthread_mutex_t		print_mutex;
 }						t_simulation;
 

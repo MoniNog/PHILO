@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/03/23 21:11:48 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:14:35 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	free_malloc(t_simulation *simulation)
 	free(simulation->philosophers);
 	free(simulation->param);
 	pthread_mutex_destroy(&simulation->print_mutex);
+	pthread_mutex_destroy(&simulation->status_mutex);
 	free(simulation);
 	return (0);
 }
