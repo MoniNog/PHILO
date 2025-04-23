@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/04/23 15:14:35 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 20:35:11 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	free_malloc(t_simulation *simulation)
 	return (0);
 }
 
-int isdigit_str(char *str)
+int	isdigit_str(char *str)
 {
 	while (*str)
 	{
@@ -61,7 +61,7 @@ int	main(int ac, char **av)
 {
 	t_simulation	*simulation;
 
-	if ((ac == 6 && atoi(av[5]) != 0) || ac == 5 )
+	if ((ac == 6 && atoi(av[5]) != 0) || ac == 5)
 	{
 		simulation = create_simulation(av);
 		if (simulation)

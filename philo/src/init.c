@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/04/23 15:45:29 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 20:36:25 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ void	init_simulation(t_simulation *simulation)
 	int	i;
 
 	i = 0;
-	if (pthread_mutex_init(&simulation->print_mutex, NULL) != 0 || 
-			pthread_mutex_init(&simulation->status_mutex, NULL) != 0)
-				return ;
+	if (pthread_mutex_init(&simulation->print_mutex, NULL) != 0
+		|| pthread_mutex_init(&simulation->status_mutex, NULL) != 0)
+		return ;
 	gettimeofday(&simulation->t0_simulation, NULL);
 	init_philo(simulation);
 	simulation->status = 1;
@@ -46,16 +46,14 @@ void	init_simulation(t_simulation *simulation)
 			(void *)&simulation->philosophers[i]);
 		if (simulation->param->times_each_philo_must_eat != NO_PARAM)
 			simulation->philosophers[i].meals_eaten = 0;
-		if (pthread_mutex_init(&simulation->philosophers[i].left_fork, NULL) != 0)
+		if (pthread_mutex_init(&simulation->philosophers[i].left_fork, NULL)
+			!= 0)
 			return ;
 		i++;
 	}
 	i = 0;
 	while (i < simulation->param->nb_philo)
-	{
-		pthread_join(*simulation->philosophers[i].thread, NULL);
-		i++;
-	}
+		pthread_join(*simulation->philosophers[i++].thread, NULL);
 }
 
 void	create_param_struct(char **av, t_simulation *simulation)
@@ -77,9 +75,6 @@ t_simulation	*create_simulation(char **av)
 {
 	t_simulation	*simulation;
 	int				i;
-	int				cinquieme;
-	if (av[5])
-		cinquieme = atoi(av[5]);
 
 	if (param_are_valid(av) == TRUE)
 	{
@@ -94,9 +89,8 @@ t_simulation	*create_simulation(char **av)
 			if (!simulation->philosophers[i++].thread)
 				return (NULL);
 		}
-		printf("5eme : %i\n", cinquieme);
-		if (cinquieme > 0)
-			simulation->param->times_each_philo_must_eat = cinquieme;
+		if (atoi(av[5]) > 0)
+			simulation->param->times_each_philo_must_eat = atoi(av[5]);
 		else
 			simulation->param->times_each_philo_must_eat = -1;
 		return (simulation);
