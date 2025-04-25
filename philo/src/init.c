@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 15:16:31 by monoguei          #+#    #+#             */
-/*   Updated: 2025/04/23 20:36:25 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 21:01:17 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ void	create_param_struct(char **av, t_simulation *simulation)
 	simulation->param = malloc(sizeof(t_param));
 	if (!simulation->param)
 		return ;
-	simulation->param->nb_philo = atoi(av[1]);
-	simulation->param->t_die = atoi(av[2]);
-	simulation->param->t_eat = atoi(av[3]);
-	simulation->param->t_sleep = atoi(av[4]);
+	simulation->param->nb_philo = ft_atoi(av[1]);
+	simulation->param->t_die = ft_atoi(av[2]);
+	simulation->param->t_eat = ft_atoi(av[3]);
+	simulation->param->t_sleep = ft_atoi(av[4]);
 	simulation->philosophers
 		= malloc(sizeof(t_philo) * simulation->param->nb_philo);
 	if (!simulation->philosophers)
@@ -89,8 +89,8 @@ t_simulation	*create_simulation(char **av)
 			if (!simulation->philosophers[i++].thread)
 				return (NULL);
 		}
-		if (atoi(av[5]) > 0)
-			simulation->param->times_each_philo_must_eat = atoi(av[5]);
+		if (ft_atoi(av[5]) > 0)
+			simulation->param->times_each_philo_must_eat = ft_atoi(av[5]);
 		else
 			simulation->param->times_each_philo_must_eat = -1;
 		return (simulation);

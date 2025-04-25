@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/04/23 20:35:11 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:16:52 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,34 @@ int	isdigit_str(char *str)
 	return (TRUE);
 }
 
+int	ft_atoi(const char *str)
+{
+	int	i;
+	int	minus;
+	int	nb;
+
+	i = 0;
+	minus = 1;
+	nb = 0;
+	if (!str)
+		return (0);
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '+' && str[i + 1] != '-')
+		i++;
+	if (str[i] == '-')
+	{
+		minus = -1;
+		i++;
+	}
+	while (str[i] && (str[i]) > '0' && (str[i]) < '9')
+	{
+		nb = (nb * 10) + str[i] - 48;
+		i++;
+	}
+	return (minus * nb);
+}
+
 int	param_are_valid(char **av)
 {
 	int	i;
@@ -49,7 +77,7 @@ int	param_are_valid(char **av)
 	i = 1;
 	while (av[i])
 	{
-		if (!isdigit_str(av[i]) || atoi(av[i]) < 0)
+		if (!isdigit_str(av[i]) || ft_atoi(av[i]) < 0)
 			return (FALSE);
 		else
 			i++;
@@ -61,7 +89,7 @@ int	main(int ac, char **av)
 {
 	t_simulation	*simulation;
 
-	if ((ac == 6 && atoi(av[5]) != 0) || ac == 5)
+	if ((ac == 6 && ft_atoi(av[5]) != 0) || ac == 5)
 	{
 		simulation = create_simulation(av);
 		if (simulation)

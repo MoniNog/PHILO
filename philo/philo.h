@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monoguei <monoguei@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 11:04:46 by monoguei          #+#    #+#             */
-/*   Updated: 2025/04/23 15:10:14 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/04/23 20:55:09 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ typedef struct s_param
 
 //	MAIN
 int				param_are_valid(char **av);
+int				ft_atoi(const char *str);
+
 //	INIT
 int				free_malloc(t_simulation *simulation);
 void			init_simulation(t_simulation *simulation);

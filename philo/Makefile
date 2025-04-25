@@ -27,9 +27,7 @@ fclean: clean
 
 re: fclean all
 
-helgrind: $(NAME)
-	valgrind --tool=helgrind -s ./$(NAME)
-	# to dataraces
+# valgrind --tool=helgrind -s ./philo
+# to dataraces
 
-leaks: $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ./$(NAME)
+# valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ./philo
