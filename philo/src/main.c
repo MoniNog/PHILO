@@ -6,7 +6,7 @@
 /*   By: monoguei <monoguei@student.lausanne42.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 11:27:34 by monoguei          #+#    #+#             */
-/*   Updated: 2025/04/24 19:16:52 by monoguei         ###   ########.fr       */
+/*   Updated: 2025/05/24 11:00:01 by monoguei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	isdigit_str(char *str)
 {
 	while (*str)
 	{
-		if (*str < '0' || *str > '9')
+		if (*str <= '0' || *str >= '9')
 			return (FALSE);
 		str++;
 	}

@@ -1,0 +1,1 @@
+find . -type f -name "*.c" | tr '\n' ' ' > file_paths_single_line.txt

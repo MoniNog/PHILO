@@ -1,0 +1,54 @@
+___THREAD___
+→ mini-programme (tâche) qui s’exécute en parallèle des autres.
+Dans philo, chaque philosophe = 1 thread.
+
+___MUTEX___ 
+(mutual exclusion)
+→ verrou qui empêche plusieurs threads d’accéder en même temps à une ressource.
+Dans philo, chaque fourchette = 1 mutex.
+
+À savoir pour philo :
+	Les philosophes doivent verrouiller les mutex (fourchettes) avant de manger.
+	Pour éviter data race, toute variable partagée (ex : last_meal) doit être 
+		protégée par un mutex.
+	Pour éviter deadlock, penser à l’ordre de prise des mutex.
+
+___DEADLOCK___
+Dans le projet philo, un deadlock se produit quand chaque thread (philosophe)
+verrouille un mutex (fourchette) et attend un autre mutex déjà verrouillé 
+→ aucun thread ne progresse, tous sont bloqués.
+
+Pour éviter un deadlock, retiens ces 4 stratégies simples :
+	1 - Toujours prendre les mutex dans le même ordre (ex : toujours gauche puis droite).
+	2 - Limiter le nombre de threads accédant aux ressources en même temps.
+	3 - Utiliser un timeout : si un thread attend trop longtemps, il relâche ce qu’il tient.
+	4 - Un philosophe ne prend les deux fourchettes que s’il peut les avoir en même temps
+		(test les deux, sinon repose tout).
+
+___DATARACE___
+Deux philosophes (threads) accèdent en même temps à une donnée partagée 
+	(ex : état d’un philosophe), au moins un écrit, sans protection → résultat imprévisible.
+
+Comment l’éviter :
+	1 - Protéger l’accès avec un mutex (verrou).
+	2 - Toujours verrouiller avant de lire/écrire une variable partagée.
+	3 - Ne jamais accéder à une donnée partagée hors section critique.
+
+___AUTRES_PRECISIONS___
+	1 - Surveillance de la mort
+		Chaque philosophe doit être surveillé pour savoir s’il mange à temps
+		(avant time_to_die).
+		--> Solution classique : un thread monitor ou un check dans une boucle.
+	2 - Précision du timing
+		usleep peut être imprécis → utiliser un get_time() précis et faire un
+		usleep par petits pas si besoin.
+	3 - Protection de last_meal
+		Chaque accès à last_meal doit être protégé par un mutex (lecture/écriture),
+		sinon → data race.
+	4 -	Affichage synchronisé
+		Le printf doit être protégé par un mutex print_mutex, sinon l'affichage 
+		devient illisible ou mélange les lignes.
+	5 - Sortie propre
+		Quand un philosophe meurt, tous les threads doivent s’arrêter proprement :
+			- soit on utilise un flag stop_simulation (protégé par mutex),
+			- soit on detache les threads ou on les join bien.

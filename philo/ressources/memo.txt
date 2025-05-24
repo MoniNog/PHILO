@@ -1,0 +1,122 @@
+thread
+	eat le temps demande
+	cycle think - eat - sleep - die
+	afficher ce quil se passe
+	meure de faim
+simulation
+fourchette
+fork
+time
+
+faire fonctionner 2 philos en paralelle. 
+param -> philo numero 1, 2.
+faire apparaitre les activites des differents philos sur le terminal de facons distinctes
+
+
+___POUR VENDREDI___
+schema du programme
+
+__Pour Mardi__
+[_]	fonction freeeeee
+[_]	theorie thread et mutex
+
+__pour VENDREDI__
+[_]	malloc dans create_simulation -> struct - creation thread sur chaque philo plutot que sur un seul grand tableau 
+[_]	fonction freeeeee a completer (thread) - !!! boucles
+[_] tester un exemple de code, analyse ligne par ligne, mod jusqua que jai bien compris
+[_] implementer les mutex dans le projet
+
+__Pour Mardi__
+[_] reflechir a comment faire fonctionner le code de facon moin selfish
+
+__Pour Vendredi___
+[_] verifier les tests
+	[_]	Test 4 410 200 200. No philosopher should die.
+	[X]	Test 1 800 200 200. The philosopher should not eat and should die.
+	Test 5 800 200 200. No philosopher should die.
+	Test 5 800 200 200 7. No philosopher should die and
+	Test 4 310 200 100. One philosopher should die.
+
+[X] threads fonctionnent en simultanne ce qui provoque des messages simultanes. 
+	[X] un seul philo peux ecrire dans le terminal -> faire avec les lock et unlock
+
+[_] message announcing a philosopher died should be displayed no more than 10 ms
+after the actual death of the philosopher.
+	➜  philo git:(main) ✗  philo git:(main) ✗ ./philo 4 310 200 100
+		0         Philo n°1         is thinking 🤔 
+		0         Philo n°1       has taken a fork 🍴
+		0         Philo n°1           is eating 🍝 
+		0         Philo n°3         is thinking 🤔 
+		0         Philo n°3       has taken a fork ��
+		0         Philo n°3           is eating 🍝 
+		0         Philo n°2         is thinking 🤔 
+		0         Philo n°4         is thinking 🤔 
+		200       Philo n°1         is sleeping 💤 
+		200       Philo n°3         is sleeping 💤 
+		200       Philo n°2       has taken a fork 🍴
+		200       Philo n°2           is eating 🍝 
+		200       Philo n°4       has taken a fork 🍴
+		200       Philo n°4           is eating 🍝 
+		300       Philo n°1         is thinking 🤔 
+		300       Philo n°3         is thinking 🤔 
+		400       Philo n°2         is sleeping 💤 
+		400       Philo n°3                died 💀 
+		400       Philo n°4         is sleeping 💤 
+	le philo 3 devrait etre mort ou du moins afficher mort a 310
+		-> lecture de code ligne par ligne pour trouver comment resoudre.
+
+reponse : lock sur destroy boucle. si init, lock, destroy -> boucle...
+	lock sur qqch de destroy nest pas supporter et fait une boucle
+	dans print_philosopher_state le philo davant a destroy le print_mutex et lactuel essai un lock dessus alors quil nexiste plus
+
+
+1	identifier ou se trouve le probleme ligne par ligne
+2	lecture ligne par ligne pour comprendre ce quil se passe dans le code
+3	tests precis, nommer le test, identifier ce que signifie le resultat
+
+__POUR_LE_4_FEV___
+n1  [x]			init_mutex => fork ET print && destroy
+		V [X]	VALIDITE param
+n2  [_]			decalage dans le timing de la mort
+		v [X]	EXO_array
+n°3	[_]			check helgrind, sanitize
+
+trylock -> dans chaque
+philo : fork_state	init
+	quelles mod apporter pour que ca roule
+lupdate lidee cest dinstaller un flag qui dit quand la fork est dispo. 
+si elle nest pas dispo, jattends 10 milisec et je reteste.
+ainsi la fork nest pas bloquee unitilement et surtout
+on connait lheure du deces en temps reel. 
+
+
+init
+  	- etat libre de la ressource (par defaut)
+	- permet de verifier que les ressources ont ete correctement crees	
+	Préparer et configurer toutes les ressources partagées nécessaires (les fourchettes via des verrous/mutex et la synchronisation de l’affichage via un mécanisme de print synchronisé).
+	Centraliser la gestion des erreurs lors de l’allocation ou l’initialisation des ressources.
+	Garantir la cohérence de l’exécution en s’assurant que chaque philosophe dispose des outils nécessaires pour accéder aux ressources de manière sûre et ordonnée.
+
+
+return 0 tout sest bien passe
+return 1 error
+
+bool
+1 TRUE 
+0 FALSE
+
+Mieux que valgrind --tool=helgrind ?
+Tip de plus :
+Prenez un pc linux perso plutôt que les linux de l'école. Compilez avec -fsanitise=thread et débuguez sans chercher au bol comme moi.
+
+À l'école ça fait un memory alloc error mais chez moi ça print chaque étape où il y a une data race.
+
+Et si vous avez pas linux, vous pouvez encore rejoindre la lumière. Il n'est jamais trop tard
+
+
+
+[5 800 200 200]
+
+[4 410 200 200]
+
+no one should die
